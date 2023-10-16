@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'uz.ilhomjon.kirakashgo'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "uz.ilhomjon.kirakashgo"
