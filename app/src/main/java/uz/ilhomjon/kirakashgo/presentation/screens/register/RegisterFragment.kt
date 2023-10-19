@@ -1,4 +1,4 @@
-package uz.ilhomjon.kirakashgo.screens.register
+package uz.ilhomjon.kirakashgo.presentation.screens.register
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

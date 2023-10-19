@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/main_background"
     android:padding="15dp"
-    tools:context=".screens.menu.MenuFragment">
+    tools:context=".presentation.screens.menu.MenuFragment">
 
 
     <LinearLayout

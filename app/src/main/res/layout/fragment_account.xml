@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/main_background"
     android:padding="15dp"
-    tools:context=".screens.account.AccountFragment">
+    tools:context=".presentation.screens.account.AccountFragment">
 
     <LinearLayout
         android:id="@+id/back_btn"

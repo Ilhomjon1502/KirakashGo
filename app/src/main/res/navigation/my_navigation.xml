@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="uz.ilhomjon.kirakashgo.screens.register.RegisterFragment"
+        android:name="uz.ilhomjon.kirakashgo.presentation.screens.register.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/onboardingFragment"
-        android:name="uz.ilhomjon.kirakashgo.screens.onboarding.OnboardingFragment"
+        android:name="uz.ilhomjon.kirakashgo.presentation.screens.onboarding.OnboardingFragment"
         android:label="fragment_onboarding"
         tools:layout="@layout/fragment_onboarding" >
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="uz.ilhomjon.kirakashgo.screens.home.HomeFragment"
+        android:name="uz.ilhomjon.kirakashgo.presentation.screens.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/menuFragment"
-        android:name="uz.ilhomjon.kirakashgo.screens.menu.MenuFragment"
+        android:name="uz.ilhomjon.kirakashgo.presentation.screens.menu.MenuFragment"
         android:label="fragment_menu"
         tools:layout="@layout/fragment_menu" >
         <action
@@ -46,10 +46,16 @@
         <action
             android:id="@+id/action_menuFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_ordersFragment"
+            app:destination="@id/ordersFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_ordersFragment2"
+            app:destination="@id/ordersFragment" />
     </fragment>
     <fragment
         android:id="@+id/accountFragment"
-        android:name="uz.ilhomjon.kirakashgo.screens.account.AccountFragment"
+        android:name="uz.ilhomjon.kirakashgo.presentation.screens.account.AccountFragment"
         android:label="fragment_account"
         tools:layout="@layout/fragment_account" >
         <action
@@ -58,11 +64,20 @@
     </fragment>
     <fragment
         android:id="@+id/driverFragment"
-        android:name="uz.ilhomjon.kirakashgo.screens.driver.DriverFragment"
+        android:name="uz.ilhomjon.kirakashgo.presentation.screens.driver.DriverFragment"
         android:label="fragment_driver"
         tools:layout="@layout/fragment_driver" >
         <action
             android:id="@+id/action_driverFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ordersFragment"
+        android:name="uz.ilhomjon.kirakashgo.presentation.screens.orders.OrdersFragment"
+        android:label="fragment_orders"
+        tools:layout="@layout/fragment_orders" >
+        <action
+            android:id="@+id/action_ordersFragment_to_menuFragment"
             app:destination="@id/menuFragment" />
     </fragment>
 </navigation>

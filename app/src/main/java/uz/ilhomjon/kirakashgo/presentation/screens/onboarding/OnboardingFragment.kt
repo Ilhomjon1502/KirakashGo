@@ -1,4 +1,4 @@
-package uz.ilhomjon.kirakashgo.screens.menu
+package uz.ilhomjon.kirakashgo.presentation.screens.onboarding
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,18 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import uz.ilhomjon.kirakashgo.R
-import uz.ilhomjon.kirakashgo.databinding.FragmentMenuBinding
+import uz.ilhomjon.kirakashgo.databinding.FragmentOnboardingBinding
 
-class MenuFragment : Fragment() {
+class OnboardingFragment : Fragment() {
 
-    private val binding by lazy { FragmentMenuBinding.inflate(layoutInflater) }
+    private val binding by lazy { FragmentOnboardingBinding.inflate(layoutInflater) }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        binding.accountCard.setOnClickListener {
-            findNavController().navigate(R.id.accountFragment)
+        binding.nextBtn.setOnClickListener {
+            findNavController().navigate(R.id.registerFragment)
         }
         return binding.root
     }
