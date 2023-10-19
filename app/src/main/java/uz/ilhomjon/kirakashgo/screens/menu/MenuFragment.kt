@@ -20,11 +20,6 @@ class MenuFragment : Fragment() {
         binding.accountCard.setOnClickListener {
             findNavController().navigate(R.id.accountFragment)
         }
-
-        binding.profilePhoto.setOnClickListener {
-            findNavController().navigate(R.id.driverFragment)
-        }
-
         return binding.root
     }
 }

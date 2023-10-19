@@ -20,6 +20,9 @@ class HomeFragment : Fragment() {
         binding.menuBtn.setOnClickListener {
             findNavController().navigate(R.id.menuFragment)
         }
+        binding.aboutBtn.setOnClickListener {
+            findNavController().navigate(R.id.driverFragment)
+        }
         return binding.root
     }
 }
