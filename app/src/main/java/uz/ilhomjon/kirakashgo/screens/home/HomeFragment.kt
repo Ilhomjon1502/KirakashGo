@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import uz.ilhomjon.kirakashgo.R
 import uz.ilhomjon.kirakashgo.databinding.FragmentHomeBinding
 
@@ -16,6 +17,9 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        binding.menuBtn.setOnClickListener {
+            findNavController().navigate(R.id.menuFragment)
+        }
         return binding.root
     }
 }

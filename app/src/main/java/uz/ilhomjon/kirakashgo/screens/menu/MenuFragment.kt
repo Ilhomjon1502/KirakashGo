@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import uz.ilhomjon.kirakashgo.R
 import uz.ilhomjon.kirakashgo.databinding.FragmentMenuBinding
 
@@ -15,6 +16,14 @@ class MenuFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        binding.accountCard.setOnClickListener {
+            findNavController().navigate(R.id.accountFragment)
+        }
+
+        binding.profilePhoto.setOnClickListener {
+            findNavController().navigate(R.id.driverFragment)
+        }
 
         return binding.root
     }

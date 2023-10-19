@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import uz.ilhomjon.kirakashgo.R
 import uz.ilhomjon.kirakashgo.databinding.FragmentRegisterBinding
 
@@ -16,6 +17,9 @@ class RegisterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        binding.nextBtn.setOnClickListener {
+            findNavController().navigate(R.id.homeFragment)
+        }
         return binding.root
     }
 }
