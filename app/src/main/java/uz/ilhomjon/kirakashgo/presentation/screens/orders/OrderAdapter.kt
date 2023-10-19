@@ -1,5 +1,6 @@
 package uz.ilhomjon.kirakashgo.presentation.screens.orders
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ class OrderAdapter(val list: ArrayList<Order>) : RecyclerView.Adapter<ViewHolder
     }
 
     inner class OrderVh(val rvOrderItem: RvOrderItemBinding) : ViewHolder(rvOrderItem.root) {
+        @SuppressLint("SetTextI18n")
         fun onBind(order: Order) {
             rvOrderItem.addressTv.text = order.address
             rvOrderItem.price.text = "Summa: ${order.price}"
