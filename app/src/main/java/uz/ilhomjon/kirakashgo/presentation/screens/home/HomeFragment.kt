@@ -32,6 +32,8 @@ class HomeFragment : Fragment() {
         binding.aboutBtn.setOnClickListener {
             findNavController().navigate(R.id.driverFragment, bundleOf("1" to 1), navOption.build())
         }
+
+
         return binding.root
     }
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.navigation.fragment.findNavController
 import uz.ilhomjon.kirakashgo.R
 import uz.ilhomjon.kirakashgo.databinding.FragmentDriverBinding
 
@@ -17,6 +18,9 @@ class DriverFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
         return binding.root
     }
 
