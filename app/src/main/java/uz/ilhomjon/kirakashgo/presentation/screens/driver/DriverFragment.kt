@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import uz.ilhomjon.kirakashgo.R
 import uz.ilhomjon.kirakashgo.databinding.FragmentDriverBinding
 
@@ -17,5 +18,12 @@ class DriverFragment : Fragment() {
     ): View {
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val animation = AnimationUtils.loadAnimation(context, R.anim.alpha_anim)
+        binding.driverPhoto.startAnimation(animation)
     }
 }
