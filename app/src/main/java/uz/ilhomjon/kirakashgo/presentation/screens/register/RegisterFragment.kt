@@ -27,6 +27,7 @@ class RegisterFragment : Fragment() {
         binding.nextBtn.setOnClickListener {
             findNavController().navigate(R.id.homeFragment, bundleOf("1" to 1), navOption.build())
         }
+
         return binding.root
     }
 }
