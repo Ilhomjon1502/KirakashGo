@@ -6,14 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import uz.ilhomjon.kirakashgo.R
 import uz.ilhomjon.kirakashgo.databinding.FragmentOnboardingBinding
+import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverViewModel
 
+@AndroidEntryPoint
 class OnboardingFragment : Fragment() {
 
     private val binding by lazy { FragmentOnboardingBinding.inflate(layoutInflater) }
+    private val driverViewModel: DriverViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
