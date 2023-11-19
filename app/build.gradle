@@ -65,6 +65,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+    //Call Adapter
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"
 }
 // Allow references to generated code
 kapt {

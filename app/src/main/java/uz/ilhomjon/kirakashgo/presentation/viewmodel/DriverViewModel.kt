@@ -1,5 +1,6 @@
 package uz.ilhomjon.kirakashgo.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,68 +20,52 @@ class DriverViewModel @Inject constructor(
     private val driverRepository: DriverRepository
 ) : ViewModel() {
 
-    private val loginStateFlow = MutableStateFlow<Resource<LoginDriverResponse>>(Resource.Loading())
 
-    fun loginDriver(username: String): MutableStateFlow<Resource<LoginDriverResponse>> {
+    //LOGIN
+    private val loginStateFlow = MutableStateFlow<LoginDriverResponse?>(null)
+
+    fun loginDriver(username: String): MutableStateFlow<LoginDriverResponse?> {
         viewModelScope.launch {
-            driverRepository.loginDriver(username).collectLatest { response ->
-                when (response) {
-                    is Resource.Error -> loginStateFlow.value = Resource.Error("something wrong")
-                    is Resource.Loading -> loginStateFlow.value = Resource.Loading()
-                    is Resource.Success -> loginStateFlow.value = Resource.Success(response.data)
+            val flow = driverRepository.loginDriver(username)
+
+            flow.collectLatest {
+                if (it.isSuccessful) {
+                    loginStateFlow.value = it.body()
                 }
             }
         }
         return loginStateFlow
     }
 
-    private val checkSmsCodeStateFlow =
-        MutableStateFlow<Resource<CheckSmsCodeResponse>>(Resource.Loading())
 
-    fun smsCodeCheck(
-        username: String, smsCode: String
-    ): MutableStateFlow<Resource<CheckSmsCodeResponse>> {
+    //CHECK SMS
+    private val smsCheckCodeStateFlow = MutableStateFlow<CheckSmsCodeResponse?>(null)
+    fun smsCheckCode(username: String, smsCode: String): MutableStateFlow<CheckSmsCodeResponse?> {
         viewModelScope.launch {
-            driverRepository.smsCheckCode(username, smsCode).collectLatest { response ->
-                when (response) {
-                    is Resource.Error -> {
-                        checkSmsCodeStateFlow.value = Resource.Error("Something error")
-                    }
-
-                    is Resource.Loading -> {
-                        checkSmsCodeStateFlow.value = Resource.Loading()
-                    }
-
-                    is Resource.Success -> {
-                        checkSmsCodeStateFlow.value = Resource.Success(response.data)
-                    }
+            val flow = driverRepository.smsCheckCode(username, smsCode)
+            flow.collectLatest {
+                if (it.isSuccessful) {
+                    smsCheckCodeStateFlow.value = it.body()
                 }
             }
         }
-        return checkSmsCodeStateFlow
+        return smsCheckCodeStateFlow
     }
 
-    private val driverTokenStateFlow =
-        MutableStateFlow<Resource<GetDriveTokenResponse>>(Resource.Loading())
-
-    fun getDriveToken(username: String): MutableStateFlow<Resource<GetDriveTokenResponse>> {
+    //TOKEN
+    private val driverTokenFlow = MutableStateFlow<GetDriveTokenResponse?>(null)
+    fun getDriverToken(
+        username: String,
+        smsCode: String
+    ): MutableStateFlow<GetDriveTokenResponse?> {
         viewModelScope.launch {
-            driverRepository.getDriveToken(username).collectLatest { response ->
-                when (response) {
-                    is Resource.Error -> {
-                        driverTokenStateFlow.value = Resource.Error("Something went wrong")
-                    }
-
-                    is Resource.Loading -> {
-                        driverTokenStateFlow.value = Resource.Loading()
-                    }
-
-                    is Resource.Success -> {
-                        driverTokenStateFlow.value = Resource.Success(response.data)
-                    }
+            val flow = driverRepository.getDriveToken(username)
+            flow.collectLatest {
+                if (it.isSuccessful) {
+                    driverTokenFlow.value = it.body()
                 }
             }
         }
-        return driverTokenStateFlow
+        return driverTokenFlow
     }
 }

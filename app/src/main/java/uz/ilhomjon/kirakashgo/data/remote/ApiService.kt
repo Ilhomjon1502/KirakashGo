@@ -1,6 +1,7 @@
 package uz.ilhomjon.kirakashgo.data.remote
 
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
@@ -16,26 +17,19 @@ interface ApiService {
     @POST("drivers/login/")
     suspend fun loginDriver(
         @Query("username") username: String
-    ): Resource<LoginDriverResponse>
+    ): Response<LoginDriverResponse>
 
     @POST("drivers/sms_chackcode/")
     suspend fun smsCheckCode(
         @Query("username") username: String,
         @Query("sms_code") sms_code: String
-    ): Resource<CheckSmsCodeResponse>
+    ): Response<CheckSmsCodeResponse>
 
 
     @POST("user/driver_token/")
     suspend fun getDriverToken(
         @Query("username") username: String
-    ): Resource<GetDriveTokenResponse>
-
-
-
-
-
-
-
+    ): Response<GetDriveTokenResponse>
 
 
     //ORDER

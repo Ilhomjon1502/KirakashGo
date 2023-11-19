@@ -1,5 +1,6 @@
 package uz.ilhomjon.kirakashgo.di
 
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -8,7 +9,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import uz.ilhomjon.kirakashgo.data.remote.ApiService
-import uz.ilhomjon.kirakashgo.data.remote.repository.DriverRepositoryImp
 import uz.ilhomjon.kirakashgo.domain.repository.DriverRepository
 import uz.ilhomjon.kirakashgo.utils.Const.BASE_URL
 import javax.inject.Singleton
@@ -19,21 +19,27 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideApiService(): ApiService {
-        return Retrofit.Builder().baseUrl(BASE_URL)
+    fun provideBaseUrl(): String = BASE_URL
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(baseUrl: String): Retrofit {
+        return Retrofit.Builder().baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create()).build()
-            .create(ApiService::class.java)
     }
 
     @Provides
     @Singleton
+    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+
+
+    @Provides
+    @Singleton
     fun provideDriverRepository(
-        apiService: ApiService,
-        ioDispatcher: CoroutineDispatcher
+        apiService: ApiService, @IoDispatcher ioDispatcher: CoroutineDispatcher
     ): DriverRepository {
-        return DriverRepositoryImp(
-            apiService = apiService,
-            ioDispatcher = ioDispatcher
+        return DriverRepository(
+            apiService = apiService
         )
     }
 }
