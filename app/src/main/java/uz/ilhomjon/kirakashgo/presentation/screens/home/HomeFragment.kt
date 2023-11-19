@@ -41,7 +41,6 @@ class HomeFragment : Fragment() {
         }
 
 
-
         return binding.root
     }
 
@@ -64,7 +63,8 @@ class HomeFragment : Fragment() {
                 MyGestureListener(binding.root.context, binding.arrowRight, 1000f)
             )
 
-        Log.d("widthLength", "onResume: $viewWidthDp")
+        Log.d("widthLength"
+            , "onResume: $viewWidthDp")
         binding.arrowRight.setOnTouchListener { _, event ->
             gestureDetector.onTouchEvent(event)
             true
