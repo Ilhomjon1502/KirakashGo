@@ -2,6 +2,7 @@ package uz.ilhomjon.kirakashgo.data.remote
 
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
@@ -21,14 +22,13 @@ interface ApiService {
 
     @POST("drivers/sms_chackcode/")
     suspend fun smsCheckCode(
-        @Query("username") username: String,
-        @Query("sms_code") sms_code: String
+        @Query("username") username: String, @Query("sms_code") sms_code: String
     ): Response<CheckSmsCodeResponse>
 
 
     @POST("user/driver_token/")
     suspend fun getDriverToken(
-        @Query("username") username: String
+        @Header("Authorization") apiKey: String
     ): Response<GetDriveTokenResponse>
 
 
@@ -55,8 +55,7 @@ interface ApiService {
     //LOCATION
     @POST("drivers/location/")
     suspend fun driverLocation(
-        @Query("longitude") longitude: String,
-        @Query("latitude") latitude: String
+        @Query("longitude") longitude: String, @Query("latitude") latitude: String
     ): DriverLocationResponse
 
     //PROFILE

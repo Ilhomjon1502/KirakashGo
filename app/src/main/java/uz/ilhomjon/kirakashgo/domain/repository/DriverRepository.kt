@@ -23,5 +23,5 @@ class DriverRepository @Inject constructor(
         flow { emit(apiService.smsCheckCode(username, smsCode)) }
 
     suspend fun getDriveToken(username: String): Flow<Response<GetDriveTokenResponse>> =
-        flow { emit(apiService.getDriverToken(username)) }
+        flow { emit(apiService.getDriverToken("Bearer $username")) }
 }

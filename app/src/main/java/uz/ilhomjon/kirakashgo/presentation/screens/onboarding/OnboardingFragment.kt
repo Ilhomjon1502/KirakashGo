@@ -31,7 +31,7 @@ class OnboardingFragment : Fragment(), CoroutineScope {
     ): View {
 
         launch {
-            driverViewModel.loginDriver("996021502").collectLatest {
+            driverViewModel.getDriverToken("996021502").collectLatest {
                 Log.d("Test", "onCreateView: $it")
             }
         }

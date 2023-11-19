@@ -75,10 +75,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHeight_percent=".5">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="20dp">
+            android:padding="20dp"
+            app:layoutDescription="@xml/come_motion">
 
             <TextView
                 android:id="@+id/home_service_address_title"
@@ -157,13 +159,15 @@
                 app:layout_constraintBottom_toTopOf="@id/phone_number"
                 app:layout_constraintTop_toBottomOf="@id/cancel_btn">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <androidx.constraintlayout.motion.widget.MotionLayout
                     android:id="@+id/arrive_card_const"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/arrive_card_background">
+                    android:background="@drawable/arrive_card_background"
+                    app:layoutDescription="@xml/come_motion">
 
                     <TextView
+                        android:id="@+id/comeText"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:fontFamily="@font/montserratsemibold"
@@ -181,7 +185,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.motion.widget.MotionLayout>
             </androidx.cardview.widget.CardView>
 
             <com.google.android.material.button.MaterialButton
@@ -198,7 +202,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/arrive_card" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.motion.widget.MotionLayout>
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

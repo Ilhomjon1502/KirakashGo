@@ -53,22 +53,22 @@ class HomeFragment : Fragment() {
         binding.aboutBtn.startAnimation(animation)
 
 
-        binding.arriveCard.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        val viewWidth = binding.arriveCard.measuredWidth
-        val viewWidthDp = pxToDp(viewWidth)
+//        binding.arriveCard.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+//        val viewWidth = binding.arriveCard.measuredWidth
+//        val viewWidthDp = pxToDp(viewWidth)
+//
+//        gestureDetector =
+//            GestureDetectorCompat(
+//                binding.root.context,
+//                MyGestureListener(binding.root.context, binding.arrowRight, 1000f)
+//            )
 
-        gestureDetector =
-            GestureDetectorCompat(
-                binding.root.context,
-                MyGestureListener(binding.root.context, binding.arrowRight, 1000f)
-            )
-
-        Log.d("widthLength"
-            , "onResume: $viewWidthDp")
-        binding.arrowRight.setOnTouchListener { _, event ->
-            gestureDetector.onTouchEvent(event)
-            true
-        }
+//        Log.d("widthLength"
+//            , "onResume: $viewWidthDp")
+//        binding.arrowRight.setOnTouchListener { _, event ->
+//            gestureDetector.onTouchEvent(event)
+//            true
+//        }
     }
 
     fun pxToDp(px: Int): Float {

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.ilhomjon.kirakashgo.data.remote.dto.CheckSmsCodeResponse
@@ -55,16 +56,21 @@ class DriverViewModel @Inject constructor(
     //TOKEN
     private val driverTokenFlow = MutableStateFlow<GetDriveTokenResponse?>(null)
     fun getDriverToken(
-        username: String,
-        smsCode: String
+        username: String
     ): MutableStateFlow<GetDriveTokenResponse?> {
+
         viewModelScope.launch {
             val flow = driverRepository.getDriveToken(username)
-            flow.collectLatest {
-                if (it.isSuccessful) {
-                    driverTokenFlow.value = it.body()
+            flow
+                .catch {
+                    Log.d("Test", "getDriverToken: ${it.message}")
                 }
-            }
+                .collectLatest {
+                    Log.d("Test", "getDriverToken: $it")
+                    if (it.isSuccessful) {
+                        driverTokenFlow.value = it.body()
+                    }
+                }
         }
         return driverTokenFlow
     }
