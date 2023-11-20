@@ -2,6 +2,7 @@ package uz.ilhomjon.kirakashgo.data.remote
 
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -28,7 +29,7 @@ interface ApiService {
 
     @POST("user/driver_token/")
     suspend fun getDriverToken(
-        @Header("Authorization") apiKey: String
+        @Body() data: GetTokenData
     ): Response<GetDriveTokenResponse>
 
 

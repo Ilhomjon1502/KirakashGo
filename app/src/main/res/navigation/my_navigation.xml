@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_navigation"
-    app:startDestination="@id/onboardingFragment">
+    app:startDestination="@id/checkSmsCodeFragment">
 
     <fragment
         android:id="@+id/registerFragment"
         android:name="uz.ilhomjon.kirakashgo.presentation.screens.register.RegisterFragment"
         android:label="fragment_register"
-        tools:layout="@layout/fragment_register" >
+        tools:layout="@layout/fragment_register">
         <action
-            android:id="@+id/action_registerFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_registerFragment_to_checkSmsCodeFragment"
+            app:destination="@id/checkSmsCodeFragment" />
     </fragment>
     <fragment
         android:id="@+id/onboardingFragment"
         android:name="uz.ilhomjon.kirakashgo.presentation.screens.onboarding.OnboardingFragment"
         android:label="fragment_onboarding"
-        tools:layout="@layout/fragment_onboarding" >
+        tools:layout="@layout/fragment_onboarding">
         <action
             android:id="@+id/action_onboardingFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
@@ -27,7 +27,7 @@
         android:id="@+id/homeFragment"
         android:name="uz.ilhomjon.kirakashgo.presentation.screens.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_menuFragment"
             app:destination="@id/menuFragment" />
@@ -36,7 +36,7 @@
         android:id="@+id/menuFragment"
         android:name="uz.ilhomjon.kirakashgo.presentation.screens.menu.MenuFragment"
         android:label="fragment_menu"
-        tools:layout="@layout/fragment_menu" >
+        tools:layout="@layout/fragment_menu">
         <action
             android:id="@+id/action_menuFragment_to_accountFragment"
             app:destination="@id/accountFragment" />
@@ -57,7 +57,7 @@
         android:id="@+id/accountFragment"
         android:name="uz.ilhomjon.kirakashgo.presentation.screens.account.AccountFragment"
         android:label="fragment_account"
-        tools:layout="@layout/fragment_account" >
+        tools:layout="@layout/fragment_account">
         <action
             android:id="@+id/action_accountFragment_to_menuFragment"
             app:destination="@id/menuFragment" />
@@ -66,7 +66,7 @@
         android:id="@+id/driverFragment"
         android:name="uz.ilhomjon.kirakashgo.presentation.screens.driver.DriverFragment"
         android:label="fragment_driver"
-        tools:layout="@layout/fragment_driver" >
+        tools:layout="@layout/fragment_driver">
         <action
             android:id="@+id/action_driverFragment_to_menuFragment"
             app:destination="@id/menuFragment" />
@@ -75,9 +75,18 @@
         android:id="@+id/ordersFragment"
         android:name="uz.ilhomjon.kirakashgo.presentation.screens.orders.OrdersFragment"
         android:label="fragment_orders"
-        tools:layout="@layout/fragment_orders" >
+        tools:layout="@layout/fragment_orders">
         <action
             android:id="@+id/action_ordersFragment_to_menuFragment"
             app:destination="@id/menuFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/checkSmsCodeFragment"
+        android:name="uz.ilhomjon.kirakashgo.presentation.screens.CheckSmsCodeFragment"
+        android:label="fragment_check_sms_code"
+        tools:layout="@layout/fragment_check_sms_code">
+        <action
+            android:id="@+id/action_checkSmsCodeFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

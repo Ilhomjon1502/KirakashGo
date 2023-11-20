@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 import uz.ilhomjon.kirakashgo.data.remote.ApiService
+import uz.ilhomjon.kirakashgo.data.remote.GetTokenData
 import uz.ilhomjon.kirakashgo.data.remote.dto.CheckSmsCodeResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.LoginDriverResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.tokenresponse.GetDriveTokenResponse
@@ -23,5 +24,5 @@ class DriverRepository @Inject constructor(
         flow { emit(apiService.smsCheckCode(username, smsCode)) }
 
     suspend fun getDriveToken(username: String): Flow<Response<GetDriveTokenResponse>> =
-        flow { emit(apiService.getDriverToken("Bearer $username")) }
+        flow { emit(apiService.getDriverToken(GetTokenData(username))) }
 }
