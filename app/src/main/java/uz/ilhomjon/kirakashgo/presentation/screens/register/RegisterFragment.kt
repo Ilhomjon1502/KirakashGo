@@ -1,6 +1,7 @@
 package uz.ilhomjon.kirakashgo.presentation.screens.register
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -36,18 +38,22 @@ class RegisterFragment : Fragment(), CoroutineScope {
         navOption.setPopExitAnim(R.anim.yopilish_1)
 
         binding.nextBtn.setOnClickListener {
-            launch {
+
+            launch(Dispatchers.Main) {
                 driverViewModel.loginDriver(binding.loginEdt.text.toString()).collectLatest {
-                    if (it!!.success) {
-                        findNavController().navigate(
-                            R.id.checkSmsCodeFragment,
-                            bundleOf("username" to binding.loginEdt.text.toString()),
-                            navOption.build()
-                        )
-                    } else {
-                        Toast.makeText(
-                            context, "No user found for this username", Toast.LENGTH_SHORT
-                        ).show()
+                    Log.d("Test", "onCreateView: $it")
+                    if (it != null) {
+                        if (it.success) {
+                            findNavController().navigate(
+                                R.id.checkSmsCodeFragment,
+                                bundleOf("username" to binding.loginEdt.text.toString()),
+                                navOption.build()
+                            )
+                        } else {
+                            Toast.makeText(
+                                context, "No user found for this username", Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }
