@@ -79,8 +79,7 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="20dp"
-            app:layoutDescription="@xml/come_motion">
+            android:padding="20dp">
 
             <TextView
                 android:id="@+id/home_service_address_title"
@@ -163,8 +162,7 @@
                     android:id="@+id/arrive_card_const"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/arrive_card_background"
-                    app:layoutDescription="@xml/come_motion">
+                    android:background="@drawable/arrive_card_background">
 
                     <TextView
                         android:id="@+id/comeText"
