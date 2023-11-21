@@ -12,6 +12,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -54,7 +55,7 @@ class CheckSmsCodeFragment : Fragment(), CoroutineScope {
             navOption.setPopExitAnim(R.anim.yopilish_1)
 
 
-            launch {
+            launch(Dispatchers.Main) {
                 driverViewModel.smsCheckCode("$username", "$otp")
                     .collectLatest { checkSmsResponse ->
                         if (checkSmsResponse!!.success!!) {
