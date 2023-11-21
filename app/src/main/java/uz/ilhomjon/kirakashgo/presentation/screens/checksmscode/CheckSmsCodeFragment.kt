@@ -6,13 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.ilhomjon.kirakashgo.R
+import uz.ilhomjon.kirakashgo.data.local.sharedpref.MySharedPreference
 import uz.ilhomjon.kirakashgo.databinding.FragmentCheckSmsCodeBinding
 import uz.ilhomjon.kirakashgo.presentation.common.CustomOtpView
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverViewModel
@@ -41,12 +45,26 @@ class CheckSmsCodeFragment : Fragment(), CoroutineScope {
             val otp = customOtpView.getOtp()
             Log.d("Test", "onViewCreated: $otp")
 
+            MySharedPreference.init(binding.root.context)
+
+            val navOption = NavOptions.Builder()
+            navOption.setEnterAnim(R.anim.ochilish_1)
+            navOption.setPopEnterAnim(R.anim.ochilish_2)
+            navOption.setExitAnim(R.anim.yopilish_2)
+            navOption.setPopExitAnim(R.anim.yopilish_1)
+
+
             launch {
                 driverViewModel.smsCheckCode("$username", "$otp")
                     .collectLatest { checkSmsResponse ->
                         if (checkSmsResponse!!.success!!) {
                             driverViewModel.getDriverToken("$username").collectLatest { token ->
-                                Log.d("Test", "onViewCreated: $token")
+                                if (token != null) {
+                                    MySharedPreference.token = token
+                                    findNavController().navigate(
+                                        R.id.homeFragment, bundleOf("1" to 1), navOption.build()
+                                    )
+                                }
                             }
                         }
                     }
