@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_navigation"
-    app:startDestination="@id/checkSmsCodeFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/registerFragment"
@@ -82,7 +82,7 @@
     </fragment>
     <fragment
         android:id="@+id/checkSmsCodeFragment"
-        android:name="uz.ilhomjon.kirakashgo.presentation.screens.CheckSmsCodeFragment"
+        android:name="uz.ilhomjon.kirakashgo.presentation.screens.checksmscode.CheckSmsCodeFragment"
         android:label="fragment_check_sms_code"
         tools:layout="@layout/fragment_check_sms_code">
         <action

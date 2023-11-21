@@ -1,4 +1,4 @@
-package uz.ilhomjon.kirakashgo.presentation.screens.getsure
+package uz.ilhomjon.kirakashgo.presentation.common
 
 import android.content.Context
 import android.util.Log

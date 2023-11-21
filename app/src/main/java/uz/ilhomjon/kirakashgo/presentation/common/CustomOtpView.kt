@@ -77,4 +77,22 @@ class CustomOtpView : LinearLayout {
         // Move focus to the next EditText
         next.requestFocus()
     }
+
+    fun isOtpComplete(): Boolean {
+        // Check if all EditText fields have non-empty text
+        return findViewById<EditText>(R.id.editText1).text.isNotEmpty() &&
+                findViewById<EditText>(R.id.editText2).text.isNotEmpty() &&
+                findViewById<EditText>(R.id.editText3).text.isNotEmpty() &&
+                findViewById<EditText>(R.id.editText4).text.isNotEmpty() &&
+                findViewById<EditText>(R.id.editText5).text.isNotEmpty()
+    }
+
+    fun getOtp(): String {
+        // Get the complete OTP from the EditText fields
+        return "${findViewById<EditText>(R.id.editText1).text}" +
+                "${findViewById<EditText>(R.id.editText2).text}" +
+                "${findViewById<EditText>(R.id.editText3).text}" +
+                "${findViewById<EditText>(R.id.editText4).text}" +
+                "${findViewById<EditText>(R.id.editText5).text}"
+    }
 }
