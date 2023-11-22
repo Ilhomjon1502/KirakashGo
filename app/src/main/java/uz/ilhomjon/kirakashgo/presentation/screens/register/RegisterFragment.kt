@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import uz.ilhomjon.kirakashgo.R
 import uz.ilhomjon.kirakashgo.databinding.FragmentRegisterBinding
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverViewModel
+import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
 @AndroidEntryPoint
@@ -37,27 +38,33 @@ class RegisterFragment : Fragment(), CoroutineScope {
         navOption.setExitAnim(R.anim.yopilish_2)
         navOption.setPopExitAnim(R.anim.yopilish_1)
 
-        binding.nextBtn.setOnClickListener {
-
-            launch(Dispatchers.Main) {
-                driverViewModel.loginDriver(binding.loginEdt.text.toString()).collectLatest {
-                    Log.d("Test", "onCreateView: $it")
-                    if (it != null) {
-                        if (it.success) {
-                            findNavController().navigate(
-                                R.id.checkSmsCodeFragment,
-                                bundleOf("username" to binding.loginEdt.text.toString()),
-                                navOption.build()
-                            )
-                        } else {
-                            Toast.makeText(
-                                context, "No user found for this username", Toast.LENGTH_SHORT
-                            ).show()
+        try {
+            binding.nextBtn.setOnClickListener {
+                launch(Dispatchers.Main) {
+                    driverViewModel.loginDriver(binding.loginEdt.text.toString()).collectLatest {
+                        Log.d("Test", "onCreateView: $it")
+                        if (it != null) {
+                            if (it.success) {
+                                findNavController().navigate(
+                                    R.id.checkSmsCodeFragment,
+                                    bundleOf("username" to binding.loginEdt.text.toString()),
+                                    navOption.build()
+                                )
+                            } else {
+                                Toast.makeText(
+                                    context, "No user found for this username", Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }
                 }
             }
+        } catch (e: IOException) {
+            Toast.makeText(context, "Internet bilan aloqani tekshiring", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(context, "Xatolik!", Toast.LENGTH_SHORT).show()
         }
+
 
         return binding.root
     }

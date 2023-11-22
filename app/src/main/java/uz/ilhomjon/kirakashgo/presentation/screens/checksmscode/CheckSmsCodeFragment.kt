@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
@@ -21,6 +22,7 @@ import uz.ilhomjon.kirakashgo.data.local.sharedpref.MySharedPreference
 import uz.ilhomjon.kirakashgo.databinding.FragmentCheckSmsCodeBinding
 import uz.ilhomjon.kirakashgo.presentation.common.CustomOtpView
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverViewModel
+import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
 @AndroidEntryPoint
@@ -54,22 +56,28 @@ class CheckSmsCodeFragment : Fragment(), CoroutineScope {
             navOption.setExitAnim(R.anim.yopilish_2)
             navOption.setPopExitAnim(R.anim.yopilish_1)
 
-
-            launch(Dispatchers.Main) {
-                driverViewModel.smsCheckCode("$username", "$otp")
-                    .collectLatest { checkSmsResponse ->
-                        if (checkSmsResponse!!.success!!) {
-                            driverViewModel.getDriverToken("$username").collectLatest { token ->
-                                if (token != null) {
-                                    MySharedPreference.token = token
-                                    findNavController().navigate(
-                                        R.id.homeFragment, bundleOf("1" to 1), navOption.build()
-                                    )
+            try {
+                launch(Dispatchers.Main) {
+                    driverViewModel.smsCheckCode("$username", "$otp")
+                        .collectLatest { checkSmsResponse ->
+                            if (checkSmsResponse!!.success!!) {
+                                driverViewModel.getDriverToken("$username").collectLatest { token ->
+                                    if (token != null) {
+                                        MySharedPreference.token = token
+                                        findNavController().navigate(
+                                            R.id.homeFragment, bundleOf("1" to 1), navOption.build()
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
+                }
+            } catch (e: IOException) {
+                Toast.makeText(context, "Internet bilan bog'liq xatolik", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(context, "Xatolik!", Toast.LENGTH_SHORT).show()
             }
+
         }
     }
 
