@@ -56,8 +56,8 @@ class CheckSmsCodeFragment : Fragment(), CoroutineScope {
             navOption.setExitAnim(R.anim.yopilish_2)
             navOption.setPopExitAnim(R.anim.yopilish_1)
 
-            try {
-                launch(Dispatchers.Main) {
+            launch(Dispatchers.Main) {
+                try {
                     driverViewModel.smsCheckCode("$username", "$otp")
                         .collectLatest { checkSmsResponse ->
                             if (checkSmsResponse!!.success!!) {
@@ -71,11 +71,12 @@ class CheckSmsCodeFragment : Fragment(), CoroutineScope {
                                 }
                             }
                         }
+                } catch (e: IOException) {
+                    Toast.makeText(context, "Internet bilan bog'liq xatolik", Toast.LENGTH_SHORT)
+                        .show()
+                } catch (e: Exception) {
+                    Toast.makeText(context, "Xatolik!", Toast.LENGTH_SHORT).show()
                 }
-            } catch (e: IOException) {
-                Toast.makeText(context, "Internet bilan bog'liq xatolik", Toast.LENGTH_SHORT).show()
-            } catch (e: Exception) {
-                Toast.makeText(context, "Xatolik!", Toast.LENGTH_SHORT).show()
             }
 
         }

@@ -41,23 +41,37 @@ class RegisterFragment : Fragment(), CoroutineScope {
         try {
             binding.nextBtn.setOnClickListener {
                 launch(Dispatchers.Main) {
-                    driverViewModel.loginDriver(binding.loginEdt.text.toString()).collectLatest {
-                        Log.d("Test", "onCreateView: $it")
-                        if (it != null) {
-                            if (it.success) {
-                                findNavController().navigate(
-                                    R.id.checkSmsCodeFragment,
-                                    bundleOf("username" to binding.loginEdt.text.toString()),
-                                    navOption.build()
-                                )
-                            } else {
-                                Toast.makeText(
-                                    context, "No user found for this username", Toast.LENGTH_SHORT
-                                ).show()
+                    try {
+                        driverViewModel.loginDriver(binding.loginEdt.text.toString())
+                            .collectLatest {
+                                Log.d("Test", "onCreateView: $it")
+                                if (it != null) {
+                                    if (it.success) {
+                                        findNavController().navigate(
+                                            R.id.checkSmsCodeFragment,
+                                            bundleOf("username" to binding.loginEdt.text.toString()),
+                                            navOption.build()
+                                        )
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            "No user found for this username",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
                             }
-                        }
+                    } catch (e: IOException) {
+                        Toast.makeText(
+                            context,
+                            "Internet bilan bog'liq xatolik",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Xatolik!", Toast.LENGTH_SHORT).show()
                     }
                 }
+
             }
         } catch (e: IOException) {
             Toast.makeText(context, "Internet bilan aloqani tekshiring", Toast.LENGTH_SHORT).show()
