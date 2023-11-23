@@ -10,6 +10,7 @@ import retrofit2.http.Query
 import uz.ilhomjon.kirakashgo.data.remote.dto.CheckSmsCodeResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.DriverLocationResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.LoginDriverResponse
+import uz.ilhomjon.kirakashgo.data.remote.dto.driverprofileresponse.DriverProfileResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.tokenresponse.GetDriveTokenResponse
 import uz.ilhomjon.kirakashgo.utils.Resource
 
@@ -60,8 +61,10 @@ interface ApiService {
     ): DriverLocationResponse
 
     //PROFILE
-    @POST("drivers/profil")
-    suspend fun driverProfile()
+    @POST("drivers/profil/")
+    suspend fun driverProfile(
+        @Header("Authorization") token: String
+    ):Response<DriverProfileResponse>
 }
 
 //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNjc1MDcwLCJpYXQiOjE3MDAxMzkwNzAsImp0aSI6IjhjNWU1OWNiNjUxMDQwZmFhNjE4ZWM4YTNlMjUwYjNlIiwidXNlcl9pZCI6NH0.OYIbT8TYdLN_30fmg7x7ms1q4_cMKKPXXxMBt0YHlG8

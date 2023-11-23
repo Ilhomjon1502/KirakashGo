@@ -7,6 +7,7 @@ import uz.ilhomjon.kirakashgo.data.remote.ApiService
 import uz.ilhomjon.kirakashgo.data.remote.GetTokenData
 import uz.ilhomjon.kirakashgo.data.remote.dto.CheckSmsCodeResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.LoginDriverResponse
+import uz.ilhomjon.kirakashgo.data.remote.dto.driverprofileresponse.DriverProfileResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.tokenresponse.GetDriveTokenResponse
 import uz.ilhomjon.kirakashgo.utils.Resource
 import javax.inject.Inject
@@ -14,6 +15,7 @@ import javax.inject.Inject
 class DriverRepository @Inject constructor(
     private val apiService: ApiService
 ) {
+    //Register
     suspend fun loginDriver(username: String): Flow<Response<LoginDriverResponse>> =
         flow { emit(apiService.loginDriver(username)) }
 
@@ -25,4 +27,10 @@ class DriverRepository @Inject constructor(
 
     suspend fun getDriveToken(username: String): Flow<Response<GetDriveTokenResponse>> =
         flow { emit(apiService.getDriverToken(GetTokenData(username))) }
+
+
+    //Profile
+    suspend fun getDriverPorfile(apiKey:String):Flow<Response<DriverProfileResponse>> =
+        flow { emit(apiService.driverProfile(apiKey)) }
+
 }

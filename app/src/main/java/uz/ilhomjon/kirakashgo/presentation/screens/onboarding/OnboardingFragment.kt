@@ -23,7 +23,7 @@ import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverViewModel
 import kotlin.coroutines.CoroutineContext
 
 @AndroidEntryPoint
-class OnboardingFragment : Fragment() {
+class OnboardingFragment : Fragment(), CoroutineScope {
 
     private val binding by lazy { FragmentOnboardingBinding.inflate(layoutInflater) }
     private val driverViewModel: DriverViewModel by viewModels()
@@ -31,6 +31,12 @@ class OnboardingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        launch {
+            driverViewModel.getDriverToken("911701078").collectLatest {
+                Log.d("Test", "onCreateView: $it")
+            }
+        }
 
         MySharedPreference.init(binding.root.context)
         val token = MySharedPreference.token
@@ -59,4 +65,7 @@ class OnboardingFragment : Fragment() {
         }
         return binding.root
     }
+
+    override val coroutineContext: CoroutineContext
+        get() = Job()
 }

@@ -21,6 +21,7 @@ object AppModule {
     @Singleton
     fun provideBaseUrl(): String = BASE_URL
 
+
     @Provides
     @Singleton
     fun provideRetrofit(baseUrl: String): Retrofit {
