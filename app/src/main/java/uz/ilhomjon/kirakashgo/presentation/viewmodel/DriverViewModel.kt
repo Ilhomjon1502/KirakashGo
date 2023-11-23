@@ -26,14 +26,18 @@ class DriverViewModel @Inject constructor(
     private val loginStateFlow = MutableStateFlow<LoginDriverResponse?>(null)
 
     fun loginDriver(username: String): MutableStateFlow<LoginDriverResponse?> {
-        viewModelScope.launch {
-            val flow = driverRepository.loginDriver(username)
+        try {
+            viewModelScope.launch {
+                val flow = driverRepository.loginDriver(username)
 
-            flow.collectLatest {
-                if (it.isSuccessful) {
-                    loginStateFlow.value = it.body()
+                flow.collectLatest {
+                    if (it.isSuccessful) {
+                        loginStateFlow.value = it.body()
+                    }
                 }
             }
+        }catch (e:Exception){
+            Log.d("test", "loginDriver: internet error")
         }
         return loginStateFlow
     }
