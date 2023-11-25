@@ -63,7 +63,7 @@ interface ApiService {
     //PROFILE
     @POST("drivers/profil/")
     suspend fun driverProfile(
-        @Header("Authorization") token: String
+        @Header("Bearer ") token: String
     ):Response<DriverProfileResponse>
 }
 

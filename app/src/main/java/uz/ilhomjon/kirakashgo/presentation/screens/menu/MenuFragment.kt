@@ -34,7 +34,7 @@ class MenuFragment : Fragment(), CoroutineScope {
 //        val apiKey = MySharedPreference.token.access
         val apiKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg1ODc0LCJpYXQiOjE3MDA3NDk4NzQsImp0aSI6IjMyZGQzNjBjN2JmYzQ5NDM5OTA3NmIyNDkwMTA4MjQyIiwidXNlcl9pZCI6MTV9.Clx7mV5ugojchjwvA_x3l5-jdnEAInKiO_Hrx6zfThk"
         launch {
-            viewModel.getDriverProfile(apiKey = "Bearer "+apiKey).collectLatest {
+            viewModel.getDriverProfile(apiKey =apiKey).collectLatest {
                 Log.d("MenuFragmentDriverData", "onCreateView: $it")
             }
         }
