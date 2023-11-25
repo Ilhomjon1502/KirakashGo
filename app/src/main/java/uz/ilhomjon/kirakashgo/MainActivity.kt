@@ -5,12 +5,15 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import com.github.florent37.runtimepermission.kotlin.askPermission
 import dagger.hilt.android.AndroidEntryPoint
 import uz.ilhomjon.kirakashgo.taximetr.MyLocationService
+import uz.ilhomjon.kirakashgo.taximetr.websocket.MyWebSocketClient
+import java.net.URI
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         locationService()
+        connectWebSocket()
     }
 
     fun locationService(){
@@ -73,5 +77,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    fun connectWebSocket(){
+        val serverUri = URI("ws://147.182.206.31/ws/orders/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMzU0ODI2LCJpYXQiOjE3MDA4MTg4MjYsImp0aSI6Ijg3ZDc5NDNjMDk5ODQ2ODNiNjA5OTQwMDhmYjExYmMxIiwidXNlcl9pZCI6MTd9.D-8ZUxZt7hyxV_wbGpeNHpbjWlHgZRyyk0I1bEPM4W0") // Websocket server manzili
+        val client = MyWebSocketClient(serverUri)
+
+        try {
+            client.connect() // Websocketni ulash
+            Toast.makeText(this, "Connected webSocket", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
