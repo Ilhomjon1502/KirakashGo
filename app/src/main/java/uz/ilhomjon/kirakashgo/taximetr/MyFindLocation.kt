@@ -15,6 +15,10 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.tasks.Task
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 private const val TAG = "MyFindLocation"
 
@@ -35,6 +39,15 @@ class MyFindLocation(var context: Context) {
             for (location: Location in location.locations) {
                 Log.d(TAG, "onLocationResult: ${location.toString()}")
                 locationLiveData.postValue(location)
+                GlobalScope.launch(Dispatchers.IO) {
+                    try {
+                        coroutineScope {
+
+                        }
+                    }catch (e:Exception){
+                        Log.d(TAG, "onLocationResult: ${e.message}")
+                    }
+                }
             }
         }
     }
