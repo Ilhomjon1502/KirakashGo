@@ -3,6 +3,7 @@ package uz.ilhomjon.kirakashgo.data.remote
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -63,10 +64,10 @@ interface ApiService {
     ): DriverLocationResponse
 
     //PROFILE
-    @POST("drivers/profil/")
+    @GET("drivers/profil/")
     suspend fun driverProfile(
-        @Header("Bearer ") token: String
+        @Header("Authorization") token: String
     ):Response<DriverProfileResponse>
 }
 
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNjc1MDcwLCJpYXQiOjE3MDAxMzkwNzAsImp0aSI6IjhjNWU1OWNiNjUxMDQwZmFhNjE4ZWM4YTNlMjUwYjNlIiwidXNlcl9pZCI6NH0.OYIbT8TYdLN_30fmg7x7ms1q4_cMKKPXXxMBt0YHlG8
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMzU0ODI2LCJpYXQiOjE3MDA4MTg4MjYsImp0aSI6Ijg3ZDc5NDNjMDk5ODQ2ODNiNjA5OTQwMDhmYjExYmMxIiwidXNlcl9pZCI6MTd9.D-8ZUxZt7hyxV_wbGpeNHpbjWlHgZRyyk0I1bEPM4W0

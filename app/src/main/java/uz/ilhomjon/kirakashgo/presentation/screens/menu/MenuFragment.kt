@@ -32,7 +32,7 @@ class MenuFragment : Fragment(), CoroutineScope {
     ): View {
         MySharedPreference.init(binding.root.context)
 //        val apiKey = MySharedPreference.token.access
-        val apiKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMjg1ODc0LCJpYXQiOjE3MDA3NDk4NzQsImp0aSI6IjMyZGQzNjBjN2JmYzQ5NDM5OTA3NmIyNDkwMTA4MjQyIiwidXNlcl9pZCI6MTV9.Clx7mV5ugojchjwvA_x3l5-jdnEAInKiO_Hrx6zfThk"
+        val apiKey="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMzU0ODI2LCJpYXQiOjE3MDA4MTg4MjYsImp0aSI6Ijg3ZDc5NDNjMDk5ODQ2ODNiNjA5OTQwMDhmYjExYmMxIiwidXNlcl9pZCI6MTd9.D-8ZUxZt7hyxV_wbGpeNHpbjWlHgZRyyk0I1bEPM4W0"
         launch {
             viewModel.getDriverProfile(apiKey =apiKey).collectLatest {
                 Log.d("MenuFragmentDriverData", "onCreateView: $it")

@@ -31,6 +31,6 @@ class DriverRepository @Inject constructor(
 
     //Profile
     suspend fun getDriverPorfile(apiKey:String):Flow<Response<DriverProfileResponse>> =
-        flow { emit(apiService.driverProfile(apiKey)) }
+        flow { emit(apiService.driverProfile("Bearer "+apiKey)) }
 
 }

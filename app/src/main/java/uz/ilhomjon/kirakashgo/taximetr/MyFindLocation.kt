@@ -6,6 +6,7 @@ import android.location.Location
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -15,18 +16,21 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.tasks.Task
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverProfileViewModel
 
 private const val TAG = "MyFindLocation"
-
+//@AndroidEntryPoint
 class MyFindLocation(var context: Context) {
     val REQUEST_CODE_PERMISSION = 1000
     lateinit var locationRequest: LocationRequest
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
+//    private val viewModel: DriverProfileViewModel by viewModels()
     companion object {
         val locationLiveData = MutableLiveData<Location>()
     }
