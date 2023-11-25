@@ -44,7 +44,6 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.driverFragment, bundleOf("1" to 1), navOption.build())
         }
 
-        locationService()
         return binding.root
     }
 
@@ -77,31 +76,5 @@ class HomeFragment : Fragment() {
         return px / density
     }
 
-    fun locationService(){
-        askPermission(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.FOREGROUND_SERVICE){
-            //all permissions already granted or just granted
-            ContextCompat.startForegroundService(requireContext(), Intent(requireActivity(), MyLocationService::class.java))
-        }.onDeclined { e ->
-            if (e.hasDenied()) {
 
-                AlertDialog.Builder(requireContext())
-                    .setMessage("Please accept our permissions")
-                    .setPositiveButton("yes") { dialog, which ->
-                        e.askAgain();
-                    } //ask again
-                    .setNegativeButton("no") { dialog, which ->
-                        dialog.dismiss();
-                    }
-                    .show();
-            }
-
-            if(e.hasForeverDenied()) {
-                //the list of forever denied permissions, user has check 'never ask again'
-
-                // you need to open setting manually if you really need it
-                e.goToSettings();
-            }
-        }
-
-    }
 }
