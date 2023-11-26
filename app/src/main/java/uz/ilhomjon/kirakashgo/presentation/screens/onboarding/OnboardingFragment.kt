@@ -57,6 +57,7 @@ class OnboardingFragment : Fragment(), CoroutineScope {
 
         binding.nextBtn.setOnClickListener {
             if (token.access == null) {
+                findNavController().popBackStack()
                 findNavController().navigate(
                     R.id.registerFragment,
                     bundleOf("1" to 1),

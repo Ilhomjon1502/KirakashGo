@@ -3,6 +3,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="onboarding_welcome">Xush kelibsiz!</string>
-    <string name="register_info">Lorem ipsum dolor sit amet consectetur. Feugiat nunc ut donec quis et dui quis. Felis arcu scelerisque quis nisi turpis urna posuere ac. Nisl aliquet dolor dictumst sit urna fermentum.</string>
     <string name="warning_text">Lorem ipsum dolor sit amet consectetur. Nec ultricies enim a sed elit. Tellus neque sociis sit cursus in mauris id ipsum. Nulla lacinia nunc morbi facilisi. Pretium sit et nunc fermentum.</string>
+    <string name="register_info">Ro\'yhatdan o\'tish operatorga telefon qilib yoki officemizga murojaat qilgan holda amalga oshiriladi. \nTelefon raqamingiz biriktiriladi va ushbu raqam bilan login qilib kirishingiz mumkin</string>
+    <string name="aloqa_markaz_text">Aloqa markaziga qong’iroq qilish!</string>
+    <string name="call_center_raqami">0000</string>
 </resources>

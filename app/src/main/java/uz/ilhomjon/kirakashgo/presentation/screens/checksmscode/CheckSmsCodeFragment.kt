@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
@@ -22,6 +23,7 @@ import uz.ilhomjon.kirakashgo.data.local.sharedpref.MySharedPreference
 import uz.ilhomjon.kirakashgo.databinding.FragmentCheckSmsCodeBinding
 import uz.ilhomjon.kirakashgo.presentation.common.CustomOtpView
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverViewModel
+import uz.ilhomjon.kirakashgo.presentation.viewmodel.utils.Status
 import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
@@ -57,25 +59,61 @@ class CheckSmsCodeFragment : Fragment(), CoroutineScope {
             navOption.setPopExitAnim(R.anim.yopilish_1)
 
             launch(Dispatchers.Main) {
-                try {
-                    driverViewModel.smsCheckCode("$username", "$otp")
-                        .collectLatest { checkSmsResponse ->
-                            if (checkSmsResponse!!.success!!) {
-                                driverViewModel.getDriverToken("$username").collectLatest { token ->
-                                    if (token != null) {
-                                        MySharedPreference.token = token
+
+                driverViewModel.smsCheckCode(username, otp).collectLatest {
+                    when(it?.status){
+                        Status.LOADING->{
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.nextBtn.text = it.message
+                            binding.nextBtn.isEnabled = false
+                        }
+                        Status.ERROR->{
+                            binding.progressBar.visibility = View.INVISIBLE
+                            binding.nextBtn.text = "Kirish"
+                            binding.nextBtn.isEnabled = true
+                            val dialog = AlertDialog.Builder(binding.root.context)
+                            dialog.setTitle("Xatolik")
+                            dialog.setMessage(it.message)
+                            dialog.show()
+                        }
+                        Status.SUCCESS->{
+                            driverViewModel.getDriverToken("$username").collectLatest { token ->
+                                when(token?.status){
+                                    Status.LOADING->{
+                                        binding.progressBar.visibility = View.VISIBLE
+                                        binding.nextBtn.text = token.message
+                                        binding.nextBtn.isEnabled = false
+                                    }
+                                    Status.ERROR->{
+                                        binding.progressBar.visibility = View.INVISIBLE
+                                        binding.nextBtn.text = "Kirish"
+                                        binding.nextBtn.isEnabled = true
+                                        val dialog = AlertDialog.Builder(binding.root.context)
+                                        dialog.setTitle("Xatolik")
+                                        dialog.setMessage(token.message)
+                                        dialog.show()
+                                    }
+                                    Status.SUCCESS->{
+                                        MySharedPreference.token = token.data!!
+                                        findNavController().popBackStack()
                                         findNavController().navigate(
                                             R.id.homeFragment, bundleOf("1" to 1), navOption.build()
                                         )
                                     }
+                                    else-> Toast.makeText(
+                                        context,
+                                        "Xato chiqdi va uni topa olmadik",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             }
                         }
-                } catch (e: IOException) {
-                    Toast.makeText(context, "Internet bilan bog'liq xatolik", Toast.LENGTH_SHORT)
-                        .show()
-                } catch (e: Exception) {
-                    Toast.makeText(context, "Xatolik!", Toast.LENGTH_SHORT).show()
+                        else-> Toast.makeText(
+                            context,
+                            "Xatolik yuz berdi va uni topa olmadik",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 
