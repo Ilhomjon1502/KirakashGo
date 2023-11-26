@@ -20,15 +20,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import uz.ilhomjon.kirakashgo.data.local.sharedpref.MySharedPreference
+import uz.ilhomjon.kirakashgo.data.remote.dto.DriverLocationRequest
 import uz.ilhomjon.kirakashgo.domain.repository.DriverRepository
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverProfileViewModel
 import javax.inject.Inject
 
 private const val TAG = "MyFindLocation"
 
-@AndroidEntryPoint
-class MyFindLocation(var context: Context) {
+//@AndroidEntryPoint
+class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel) {
     val REQUEST_CODE_PERMISSION = 1000
     lateinit var locationRequest: LocationRequest
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -45,13 +48,28 @@ class MyFindLocation(var context: Context) {
             for (location: Location in location.locations) {
                 Log.d(TAG, "onLocationResult: ${location.toString()}")
                 locationLiveData.postValue(location)
-                GlobalScope.launch(Dispatchers.IO) {
+                GlobalScope.launch(Dispatchers.Main) {
                     try {
                         coroutineScope {
-
+                            MySharedPreference.init(context)
+                            viewModel.postLocationDriver(
+                                MySharedPreference.token.access,
+                                DriverLocationRequest(
+                                    location.bearing.toString(),
+                                    location.latitude.toString(),
+                                    location.longitude.toString()
+                                )
+                            ).collectLatest {
+                                Log.d(TAG, "onLocationResult: PostLocationDriver $it")
+                            }
                         }
                     }catch (e:Exception){
                         Log.d(TAG, "onLocationResult: ${e.message}")
+                        Toast.makeText(
+                            context,
+                            "Location bazaga jo'natilmayapti",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }

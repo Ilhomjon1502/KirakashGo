@@ -6,6 +6,8 @@ import retrofit2.Response
 import uz.ilhomjon.kirakashgo.data.remote.ApiService
 import uz.ilhomjon.kirakashgo.data.remote.GetTokenData
 import uz.ilhomjon.kirakashgo.data.remote.dto.CheckSmsCodeResponse
+import uz.ilhomjon.kirakashgo.data.remote.dto.DriverLocationRequest
+import uz.ilhomjon.kirakashgo.data.remote.dto.DriverLocationResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.LoginDriverResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.driverprofileresponse.DriverProfileResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.tokenresponse.GetDriveTokenResponse
@@ -32,5 +34,9 @@ class DriverRepository @Inject constructor(
     //Profile
     suspend fun getDriverPorfile(apiKey:String):Flow<Response<DriverProfileResponse>> =
         flow { emit(apiService.driverProfile("Bearer "+apiKey)) }
+
+    //postLocationDriver
+    suspend fun postLocationDriver(apiKey:String, driverLocationRequest: DriverLocationRequest):Flow<DriverLocationResponse> =
+        flow { emit(apiService.driverLocation("Bearer "+apiKey, driverLocationRequest)) }
 
 }

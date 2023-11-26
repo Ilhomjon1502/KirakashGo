@@ -19,7 +19,7 @@ class MyLocationService: Service() {
     lateinit var viewModel: DriverProfileViewModel
     override fun onCreate() {
         super.onCreate()
-        myFindLocation = MyFindLocation(applicationContext)
+        myFindLocation = MyFindLocation(applicationContext, viewModel)
     }
     override fun onBind(intent: Intent): IBinder? {
         return null
