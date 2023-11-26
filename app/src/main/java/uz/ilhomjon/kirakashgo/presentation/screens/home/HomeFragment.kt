@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -18,11 +19,16 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.github.florent37.runtimepermission.kotlin.askPermission
 import uz.ilhomjon.kirakashgo.R
+import uz.ilhomjon.kirakashgo.data.local.sharedpref.MySharedPreference
 import uz.ilhomjon.kirakashgo.databinding.FragmentHomeBinding
 import uz.ilhomjon.kirakashgo.presentation.common.MyGestureListener
+import uz.ilhomjon.kirakashgo.presentation.models.OrdersSocketResponse
+import uz.ilhomjon.kirakashgo.presentation.screens.home.adapters.OrderHomeRvAdapter
 import uz.ilhomjon.kirakashgo.taximetr.MyLocationService
+import uz.ilhomjon.kirakashgo.taximetr.websocket.MyWebSocketClient
+import java.net.URI
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
 
     private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
     private lateinit var gestureDetector: GestureDetectorCompat
@@ -40,10 +46,11 @@ class HomeFragment : Fragment() {
         binding.menuBtn.setOnClickListener {
             findNavController().navigate(R.id.menuFragment, bundleOf("1" to 1), navOption.build())
         }
-        binding.aboutBtn.setOnClickListener {
-            findNavController().navigate(R.id.driverFragment, bundleOf("1" to 1), navOption.build())
-        }
+//        binding.aboutBtn.setOnClickListener {
+//            findNavController().navigate(R.id.driverFragment, bundleOf("1" to 1), navOption.build())
+//        }
 
+        connectWebSocket()
         return binding.root
     }
 
@@ -76,5 +83,29 @@ class HomeFragment : Fragment() {
         return px / density
     }
 
+    fun connectWebSocket(){
+        MySharedPreference.init(binding.root.context)
+        val serverUri = URI("ws://147.182.206.31/ws/orders/?token=${MySharedPreference.token.access}") // Websocket server manzili
+        val client = MyWebSocketClient(serverUri)
 
+        val orderAdapter = OrderHomeRvAdapter(this)
+        binding.rv.adapter = orderAdapter
+        try {
+            client.connect() // Websocketni ulash
+            Toast.makeText(context, "Buyurtmalarni ko'rish boshlandi", Toast.LENGTH_SHORT).show()
+
+            MyWebSocketClient.ordersLiveData.observe(viewLifecycleOwner){
+                orderAdapter.list.clear()
+                orderAdapter.list.addAll(it)
+                orderAdapter.notifyDataSetChanged()
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun acceptOrder(order: OrdersSocketResponse) {
+
+    }
 }
