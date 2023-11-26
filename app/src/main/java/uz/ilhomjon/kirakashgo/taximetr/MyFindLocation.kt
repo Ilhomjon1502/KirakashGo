@@ -21,16 +21,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import uz.ilhomjon.kirakashgo.domain.repository.DriverRepository
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverProfileViewModel
+import javax.inject.Inject
 
 private const val TAG = "MyFindLocation"
-//@AndroidEntryPoint
+
+@AndroidEntryPoint
 class MyFindLocation(var context: Context) {
     val REQUEST_CODE_PERMISSION = 1000
     lateinit var locationRequest: LocationRequest
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
-//    private val viewModel: DriverProfileViewModel by viewModels()
     companion object {
         val locationLiveData = MutableLiveData<Location>()
     }

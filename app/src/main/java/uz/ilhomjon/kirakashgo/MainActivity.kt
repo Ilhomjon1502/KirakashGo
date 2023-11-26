@@ -5,15 +5,18 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import com.github.florent37.runtimepermission.kotlin.askPermission
 import dagger.hilt.android.AndroidEntryPoint
+import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverProfileViewModel
 import uz.ilhomjon.kirakashgo.taximetr.MyLocationService
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    private val viewModel by viewModels<DriverProfileViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

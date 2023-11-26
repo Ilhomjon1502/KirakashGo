@@ -3,9 +3,20 @@ package uz.ilhomjon.kirakashgo.taximetr
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
+import androidx.activity.viewModels
+import androidx.navigation.navArgument
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverProfileViewModel
+import uz.ilhomjon.kirakashgo.utils.Const.API_KEY
+import javax.inject.Inject
 
-class MyLocationService : Service() {
+@AndroidEntryPoint
+class MyLocationService: Service() {
     lateinit var myFindLocation: MyFindLocation
+    @Inject
+    lateinit var viewModel: DriverProfileViewModel
     override fun onCreate() {
         super.onCreate()
         myFindLocation = MyFindLocation(applicationContext)

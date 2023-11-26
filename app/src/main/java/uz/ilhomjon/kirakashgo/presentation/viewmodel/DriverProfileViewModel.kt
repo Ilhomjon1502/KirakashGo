@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.ilhomjon.kirakashgo.data.remote.dto.driverprofileresponse.DriverProfileResponse
 import uz.ilhomjon.kirakashgo.domain.repository.DriverRepository
+import java.io.Serializable
 import javax.inject.Inject
 
 @HiltViewModel
