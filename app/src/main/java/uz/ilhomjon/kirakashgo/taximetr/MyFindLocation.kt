@@ -61,6 +61,7 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
                                 )
                             ).collectLatest {
                                 Log.d(TAG, "onLocationResult: PostLocationDriver $it")
+                                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
                             }
                         }
                     }catch (e:Exception){

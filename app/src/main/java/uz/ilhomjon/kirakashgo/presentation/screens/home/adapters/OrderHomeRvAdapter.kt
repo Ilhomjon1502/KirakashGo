@@ -22,18 +22,27 @@ class OrderHomeRvAdapter(val rvAction: RvAction, var list: ArrayList<OrdersSocke
 
             itemRvBinding.tvAddressFrom.text = ordersSocketResponse.name_startin_place
             itemRvBinding.tvAddressTo.text = ordersSocketResponse.destination_name
-            itemRvBinding.tvDescription.text = ordersSocketResponse.date
+            itemRvBinding.tvDescription.text = ordersSocketResponse.description
             if (ordersSocketResponse.baggage) {
                 itemRvBinding.luggageBtn.setBackgroundResource(R.color.blue)
                 itemRvBinding.luggageBtn.setTextColor(Color.WHITE)
+            }else{
+                itemRvBinding.luggageBtn.setBackgroundResource(R.color.white)
+                itemRvBinding.luggageBtn.setTextColor(Color.BLACK)
             }
             if (ordersSocketResponse.is_comfort) {
                 itemRvBinding.comfortBtn.setBackgroundResource(R.color.blue)
                 itemRvBinding.comfortBtn.setTextColor(Color.WHITE)
+            }else{
+                itemRvBinding.comfortBtn.setBackgroundResource(R.color.white)
+                itemRvBinding.comfortBtn.setTextColor(Color.BLACK)
             }
             if (ordersSocketResponse.for_women) {
                 itemRvBinding.ayolBtn.setBackgroundResource(R.color.blue)
                 itemRvBinding.ayolBtn.setTextColor(Color.WHITE)
+            }else{
+                itemRvBinding.ayolBtn.setBackgroundResource(R.color.white)
+                itemRvBinding.ayolBtn.setTextColor(Color.BLACK)
             }
         }
     }

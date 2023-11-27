@@ -1,6 +1,5 @@
 package uz.ilhomjon.kirakashgo.data.remote
 
-import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -15,7 +14,6 @@ import uz.ilhomjon.kirakashgo.data.remote.dto.LoginDriverResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.driverprofileresponse.DriverProfileResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.tokenresponse.GetDriveTokenResponse
 import uz.ilhomjon.kirakashgo.presentation.models.OrderAcceptResponse
-import uz.ilhomjon.kirakashgo.utils.Resource
 
 interface ApiService {
 
@@ -41,19 +39,19 @@ interface ApiService {
     @PUT("drivers/accept_order/")
     suspend fun acceptOrder(
         @Header("Authorization") token: String,
-        @Query("order_id") order_id: String
+        @Query("order_id") order_id: Int
     ):Response<OrderAcceptResponse>
 
     @PUT("drivers/start_order/")
     suspend fun startOrder(
         @Header("Authorization") token: String,
-        @Query("order_id") order_id: String
+        @Query("order_id") order_id: Int
     ):Response<OrderAcceptResponse>
 
     @PUT("drivers/finish_order/")
     suspend fun finishOrder(
         @Header("Authorization") token: String,
-        @Query("order_id") order_id: String,
+        @Query("order_id") order_id: Int,
         @Query("destination_lat") destination_lat: String,
         @Query("destination_long") destination_long: String,
         @Query("total_sum") total_sum: String,

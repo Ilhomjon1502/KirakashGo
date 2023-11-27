@@ -60,7 +60,7 @@ class MenuFragment : Fragment(), CoroutineScope {
                         binding.accountBalance.text = "${it.data?.data?.balance} so'm"
                         binding.infoTitle.text = "${it.data?.data?.car_type}"
                         binding.infoNumber.text = it.data?.data?.car_number
-                        binding.infoType.text = it.data?.data?.car_color
+                        binding.infoType.text = it.data?.data?.category?.type
                         binding.noteBalance.text = it.data?.data?.phone
                     }
                     else-> Toast.makeText(

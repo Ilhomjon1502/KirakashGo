@@ -1,8 +1,6 @@
 package uz.ilhomjon.kirakashgo.presentation.screens.home
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,28 +9,32 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.GestureDetectorCompat
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.github.florent37.runtimepermission.kotlin.askPermission
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import uz.ilhomjon.kirakashgo.R
 import uz.ilhomjon.kirakashgo.data.local.sharedpref.MySharedPreference
 import uz.ilhomjon.kirakashgo.databinding.FragmentHomeBinding
 import uz.ilhomjon.kirakashgo.presentation.common.MyGestureListener
 import uz.ilhomjon.kirakashgo.presentation.models.OrdersSocketResponse
 import uz.ilhomjon.kirakashgo.presentation.screens.home.adapters.OrderHomeRvAdapter
-import uz.ilhomjon.kirakashgo.taximetr.MyLocationService
+import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverProfileViewModel
+import uz.ilhomjon.kirakashgo.presentation.viewmodel.utils.Status
 import uz.ilhomjon.kirakashgo.taximetr.websocket.MyWebSocketClient
 import java.net.URI
-
+@AndroidEntryPoint
 class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
 
     private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
     private lateinit var gestureDetector: GestureDetectorCompat
     private var initialX = 0f // Initial X position of the ImageView
+    private val viewModel:DriverProfileViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -106,6 +108,17 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
     }
 
     override fun acceptOrder(order: OrdersSocketResponse) {
-
+        GlobalScope.launch {
+            viewModel.acceptOrder(MySharedPreference.token.access, order.id)
+                .collectLatest {
+                    when(it?.status){
+                        Status.LOADING->{}
+                        Status.ERROR->{}
+                        Status.SUCCESS->{}
+                        else-> Toast.makeText(context, "Xatolikni topa olmadik", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+        }
     }
 }

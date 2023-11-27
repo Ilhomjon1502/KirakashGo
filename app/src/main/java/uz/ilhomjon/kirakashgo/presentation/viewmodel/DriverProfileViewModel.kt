@@ -5,14 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.ilhomjon.kirakashgo.data.remote.dto.DriverLocationRequest
 import uz.ilhomjon.kirakashgo.data.remote.dto.DriverLocationResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.driverprofileresponse.DriverProfileResponse
+import uz.ilhomjon.kirakashgo.data.remote.dto.tokenresponse.GetDriveTokenResponse
 import uz.ilhomjon.kirakashgo.domain.repository.DriverRepository
+import uz.ilhomjon.kirakashgo.presentation.models.OrderAcceptResponse
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.utils.MyResource
-import java.io.Serializable
 import javax.inject.Inject
 
 private const val TAG = "DriverProfileViewModel"
@@ -59,5 +61,85 @@ class DriverProfileViewModel @Inject constructor(
         }
 
         return postFlow
+    }
+
+
+    //orders
+    private val orderAcceptFlow = MutableStateFlow<MyResource<OrderAcceptResponse>?>(null)
+    fun acceptOrder(
+        token:String,
+        id:Int
+    ): MutableStateFlow<MyResource<OrderAcceptResponse>?> {
+
+        viewModelScope.launch {
+            orderAcceptFlow.value = MyResource.loading("Buyurtmani olishga harakat qilinmoqda")
+            val flow = driverRepository.acceptOrder(token, id)
+            flow
+                .catch {
+                    Log.d("Test", "getDriverToken: ${it.message}")
+                    orderAcceptFlow.value = MyResource.error(it.message)
+                }
+                .collectLatest {
+                    Log.d("Test", "getDriverToken: $it")
+                    if (it.isSuccessful) {
+                        orderAcceptFlow.value = MyResource.success(it.body()!!)
+                    }else{
+                        orderAcceptFlow.value = MyResource.error(it.message())
+                    }
+                }
+        }
+        return orderAcceptFlow
+    }
+
+    private val orderStartFlow = MutableStateFlow<MyResource<OrderAcceptResponse>?>(null)
+    fun startOrder(
+        token:String,
+        id:Int
+    ): MutableStateFlow<MyResource<OrderAcceptResponse>?> {
+
+        viewModelScope.launch {
+            orderStartFlow.value = MyResource.loading("Buyurtmani Start qilishga harakat qilinmoqda")
+            val flow = driverRepository.acceptOrder(token, id)
+            flow
+                .catch {
+                    Log.d("Test", "getDriverToken: ${it.message}")
+                    orderStartFlow.value = MyResource.error(it.message)
+                }
+                .collectLatest {
+                    Log.d("Test", "getDriverToken: $it")
+                    if (it.isSuccessful) {
+                        orderStartFlow.value = MyResource.success(it.body()!!)
+                    }else{
+                        orderStartFlow.value = MyResource.error(it.message())
+                    }
+                }
+        }
+        return orderStartFlow
+    }
+
+    private val orderFinishFlow = MutableStateFlow<MyResource<OrderAcceptResponse>?>(null)
+    fun finishOrder(
+        token:String,
+        id:Int
+    ): MutableStateFlow<MyResource<OrderAcceptResponse>?> {
+
+        viewModelScope.launch {
+            orderFinishFlow.value = MyResource.loading("Buyurtmani tugatishga harakat qilinmoqda")
+            val flow = driverRepository.acceptOrder(token, id)
+            flow
+                .catch {
+                    Log.d("Test", "getDriverToken: ${it.message}")
+                    orderFinishFlow.value = MyResource.error(it.message)
+                }
+                .collectLatest {
+                    Log.d("Test", "getDriverToken: $it")
+                    if (it.isSuccessful) {
+                        orderFinishFlow.value = MyResource.success(it.body()!!)
+                    }else{
+                        orderFinishFlow.value = MyResource.error(it.message())
+                    }
+                }
+        }
+        return orderFinishFlow
     }
 }
