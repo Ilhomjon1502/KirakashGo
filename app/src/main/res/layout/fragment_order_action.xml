@@ -25,18 +25,19 @@
 
         <TextView
             android:id="@+id/waiting_time_title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:fontFamily="@font/montserratbold"
             android:text="Kutish vaqti"
             android:textColor="@color/white"
             android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toTopOf="@id/waiting_time" />
 
         <TextView
             android:id="@+id/waiting_time"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginBottom="20dp"
@@ -44,7 +45,18 @@
             android:text="3:54"
             android:textColor="@color/white"
             android:textSize="32sp"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toTopOf="@id/home_service_card" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_wait_switch"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cash_tv"
+        app:layout_constraintLeft_toRightOf="@id/waiting_time"
+        app:layout_constraintBottom_toTopOf="@id/home_service_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kutishni boshlash"/>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/home_service_card"
