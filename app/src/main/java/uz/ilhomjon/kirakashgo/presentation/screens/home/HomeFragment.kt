@@ -1,6 +1,10 @@
 package uz.ilhomjon.kirakashgo.presentation.screens.home
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
+import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,18 +13,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.ilhomjon.kirakashgo.R
 import uz.ilhomjon.kirakashgo.data.local.sharedpref.MySharedPreference
 import uz.ilhomjon.kirakashgo.databinding.FragmentHomeBinding
+import uz.ilhomjon.kirakashgo.databinding.RvOrderBinding
 import uz.ilhomjon.kirakashgo.presentation.common.MyGestureListener
 import uz.ilhomjon.kirakashgo.presentation.models.OrdersSocketResponse
 import uz.ilhomjon.kirakashgo.presentation.screens.home.adapters.OrderHomeRvAdapter
@@ -32,8 +39,6 @@ import java.net.URI
 class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
 
     private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
-    private lateinit var gestureDetector: GestureDetectorCompat
-    private var initialX = 0f // Initial X position of the ImageView
     private val viewModel:DriverProfileViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -56,34 +61,7 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
         return binding.root
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onResume() {
-        super.onResume()
 
-        val animation = AnimationUtils.loadAnimation(context, R.anim.alpha_anim)
-        binding.cashTv.startAnimation(animation)
-        binding.aboutBtn.startAnimation(animation)
-
-
-        binding.arriveCard.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        val viewWidth = binding.arriveCard.measuredWidth
-        val viewWidthDp = pxToDp(viewWidth)
-
-        gestureDetector = GestureDetectorCompat(
-            binding.root.context, MyGestureListener(binding.root.context, binding.arrowRight, 1000f)
-        )
-
-        Log.d("widthLength", "onResume: $viewWidthDp")
-        binding.arrowRight.setOnTouchListener { _, event ->
-            gestureDetector.onTouchEvent(event)
-            true
-        }
-    }
-
-    private fun pxToDp(px: Int): Float {
-        val density = resources.displayMetrics.density
-        return px / density
-    }
 
     fun connectWebSocket(){
         MySharedPreference.init(binding.root.context)
@@ -107,18 +85,40 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
         }
     }
 
-    override fun acceptOrder(order: OrdersSocketResponse) {
-        GlobalScope.launch {
+    override fun acceptOrder(order: OrdersSocketResponse, itemRv: RvOrderBinding) {
+        GlobalScope.launch(Dispatchers.Main) {
             viewModel.acceptOrder(MySharedPreference.token.access, order.id)
                 .collectLatest {
                     when(it?.status){
-                        Status.LOADING->{}
-                        Status.ERROR->{}
-                        Status.SUCCESS->{}
+                        Status.LOADING->{
+                            binding.rv.isEnabled = false
+                            itemRv.btnAccept.text = it.message
+                            itemRv.progressBar.visibility = View.VISIBLE
+                        }
+                        Status.ERROR->{
+                            binding.rv.isEnabled = true
+                            itemRv.btnAccept.text = "Qabul qilish"
+                            itemRv.progressBar.visibility = View.INVISIBLE
+                            val dialog = AlertDialog.Builder(binding.root.context)
+                            dialog.setTitle("Xatolik")
+                            dialog.setMessage(it.toString())
+                            dialog.show()
+                        }
+                        Status.SUCCESS->{
+                            binding.rv.isEnabled = true
+                            itemRv.btnAccept.text = "Qabul qilish"
+                            itemRv.progressBar.visibility = View.INVISIBLE
+                            OrdersSocketResponse.order = order
+
+//                            findNavController().popBackStack(R.id.homeFragment, true)
+                            findNavController().navigate(R.id.orderActionFragment)
+                        }
                         else-> Toast.makeText(context, "Xatolikni topa olmadik", Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
         }
     }
+
+
 }

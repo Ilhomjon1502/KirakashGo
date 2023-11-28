@@ -45,6 +45,8 @@ class DriverRepository @Inject constructor(
     //orders
     suspend fun acceptOrder(apiKey: String, id: Int): Flow<Response<OrderAcceptResponse>> =
         flow { emit(apiService.acceptOrder("Bearer " + apiKey, id)) }
+ suspend fun cancelOrder(apiKey: String, id: Int): Flow<Response<OrderAcceptResponse>> =
+        flow { emit(apiService.cancelOrder("Bearer " + apiKey, id)) }
 
     suspend fun startOrder(apiKey: String, id: Int): Flow<Response<OrderAcceptResponse>> =
         flow { emit(apiService.startOrder("Bearer " + apiKey, id)) }

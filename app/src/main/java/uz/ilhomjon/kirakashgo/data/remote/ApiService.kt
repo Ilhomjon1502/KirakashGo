@@ -42,6 +42,12 @@ interface ApiService {
         @Query("order_id") order_id: Int
     ):Response<OrderAcceptResponse>
 
+    @PUT("drivers/cancel_order/")
+    suspend fun cancelOrder(
+        @Header("Authorization") token: String,
+        @Query("order_id") order_id: Int
+    ):Response<OrderAcceptResponse>
+
     @PUT("drivers/start_order/")
     suspend fun startOrder(
         @Header("Authorization") token: String,
@@ -72,4 +78,7 @@ interface ApiService {
     ):Response<DriverProfileResponse>
 }
 
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMzU0ODI2LCJpYXQiOjE3MDA4MTg4MjYsImp0aSI6Ijg3ZDc5NDNjMDk5ODQ2ODNiNjA5OTQwMDhmYjExYmMxIiwidXNlcl9pZCI6MTd9.D-8ZUxZt7hyxV_wbGpeNHpbjWlHgZRyyk0I1bEPM4W0
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNjgyNDM5LCJpYXQiOjE3MDExNDY0MzksImp0aSI6IjRiMWYyYTc1ZWVlMDRiOGQ4MDE4YzE3YTExOWMxMjc0IiwidXNlcl9pZCI6MTd9.1guYAWmM9J0laAb9CIVuyOVaKVe9mqslRXRD76BVAE0
+
+//operator abbobek:
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyMTkxMTg5LCJpYXQiOjE3MDA2NTUxODksImp0aSI6IjFiZDM5NGRmNzQwZTRjMGU5ZjQ1NzA5YWI0NzUzZTE3IiwidXNlcl9pZCI6Mn0.PBhsxhZWsnmSzVwMKXmD7UdXXo0DLwLEAQxvKnTRlec

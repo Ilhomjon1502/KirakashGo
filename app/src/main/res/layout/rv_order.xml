@@ -138,12 +138,17 @@
                     app:layout_constraintTop_toBottomOf="@id/home_service_address" />
             </LinearLayout>
 
+            <FrameLayout
+                android:id="@+id/btn_frame"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_accept"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="25dp"
                 android:backgroundTint="@color/blue"
                 android:fontFamily="@font/montserratbold"
                 android:text="Qabul qilish"
@@ -153,6 +158,13 @@
                 app:layout_constraintEnd_toStartOf="@id/cancel_btn"
                 app:layout_constraintStart_toEndOf="@id/luggage_btn"
                 app:layout_constraintTop_toBottomOf="@id/home_service_address" />
+
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/progress_bar"
+                    android:visibility="invisible"/>
+            </FrameLayout>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_homeFragment_to_menuFragment"
             app:destination="@id/menuFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_orderActionFragment"
+            app:destination="@id/orderActionFragment" />
     </fragment>
     <fragment
         android:id="@+id/menuFragment"
@@ -87,6 +90,15 @@
         tools:layout="@layout/fragment_check_sms_code">
         <action
             android:id="@+id/action_checkSmsCodeFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderActionFragment"
+        android:name="uz.ilhomjon.kirakashgo.presentation.screens.orderaction.OrderActionFragment"
+        android:label="fragment_order_action"
+        tools:layout="@layout/fragment_order_action" >
+        <action
+            android:id="@+id/action_orderActionFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

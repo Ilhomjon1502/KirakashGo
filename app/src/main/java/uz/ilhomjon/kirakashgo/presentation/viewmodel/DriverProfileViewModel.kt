@@ -65,30 +65,57 @@ class DriverProfileViewModel @Inject constructor(
 
     //orders
     private val orderAcceptFlow = MutableStateFlow<MyResource<OrderAcceptResponse>?>(null)
-    fun acceptOrder(
+    suspend fun acceptOrder(
         token:String,
         id:Int
     ): MutableStateFlow<MyResource<OrderAcceptResponse>?> {
 
-        viewModelScope.launch {
             orderAcceptFlow.value = MyResource.loading("Buyurtmani olishga harakat qilinmoqda")
             val flow = driverRepository.acceptOrder(token, id)
             flow
                 .catch {
-                    Log.d("Test", "getDriverToken: ${it.message}")
+                    Log.d(TAG, "acceptOrder: ${it}")
                     orderAcceptFlow.value = MyResource.error(it.message)
                 }
                 .collectLatest {
-                    Log.d("Test", "getDriverToken: $it")
+                    Log.d(TAG, "acceptOrder: $it")
                     if (it.isSuccessful) {
                         orderAcceptFlow.value = MyResource.success(it.body()!!)
                     }else{
                         orderAcceptFlow.value = MyResource.error(it.message())
                     }
+                    Log.d(TAG, "acceptOrder: $it")
                 }
-        }
+
         return orderAcceptFlow
     }
+
+    private val orderCancelFlow = MutableStateFlow<MyResource<OrderAcceptResponse>?>(null)
+    suspend fun cancelOrder(
+        token:String,
+        id:Int
+    ): MutableStateFlow<MyResource<OrderAcceptResponse>?> {
+
+        orderCancelFlow.value = MyResource.loading("Buyurtmani bekor qilishga harakat qilinmoqda")
+        val flow = driverRepository.cancelOrder(token, id)
+        flow
+            .catch {
+                Log.d(TAG, "cancelOrder: $it")
+                orderCancelFlow.value = MyResource.error(it.message)
+            }
+            .collectLatest {
+                Log.d(TAG, "cancelOrder: $it")
+                if (it.isSuccessful) {
+                    orderCancelFlow.value = MyResource.success(it.body()!!)
+                }else{
+                    orderCancelFlow.value = MyResource.error(it.message())
+                }
+                Log.d(TAG, "cancelOrder: $it")
+            }
+
+        return orderCancelFlow
+    }
+
 
     private val orderStartFlow = MutableStateFlow<MyResource<OrderAcceptResponse>?>(null)
     fun startOrder(

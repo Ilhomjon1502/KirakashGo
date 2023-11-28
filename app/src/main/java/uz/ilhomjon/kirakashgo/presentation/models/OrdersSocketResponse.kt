@@ -21,4 +21,8 @@ data class OrdersSocketResponse(
     val starting_point_long: String,
     val total_sum: Int,
     val waiting_seconds: Int
-)
+){
+    companion object{
+        lateinit var order:OrdersSocketResponse
+    }
+}

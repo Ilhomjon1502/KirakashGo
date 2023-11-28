@@ -17,7 +17,7 @@ class OrderHomeRvAdapter(val rvAction: RvAction, var list: ArrayList<OrdersSocke
         fun onBind(ordersSocketResponse: OrdersSocketResponse) {
 
             itemRvBinding.btnAccept.setOnClickListener {
-                rvAction.acceptOrder(ordersSocketResponse)
+                rvAction.acceptOrder(ordersSocketResponse, itemRvBinding)
             }
 
             itemRvBinding.tvAddressFrom.text = ordersSocketResponse.name_startin_place
@@ -58,6 +58,6 @@ class OrderHomeRvAdapter(val rvAction: RvAction, var list: ArrayList<OrdersSocke
     }
 
     interface RvAction{
-        fun acceptOrder(order:OrdersSocketResponse)
+        fun acceptOrder(order:OrdersSocketResponse, itemRv:RvOrderBinding)
     }
 }
