@@ -8,10 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import uz.ilhomjon.kirakashgo.data.remote.dto.DriverLocationRequest
-import uz.ilhomjon.kirakashgo.data.remote.dto.DriverLocationResponse
+import uz.ilhomjon.kirakashgo.data.remote.dto.driverpostlocation.DriverLocationRequest
+import uz.ilhomjon.kirakashgo.data.remote.dto.driverpostlocation.DriverLocationResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.driverprofileresponse.DriverProfileResponse
-import uz.ilhomjon.kirakashgo.data.remote.dto.tokenresponse.GetDriveTokenResponse
 import uz.ilhomjon.kirakashgo.domain.repository.DriverRepository
 import uz.ilhomjon.kirakashgo.presentation.models.OrderAcceptResponse
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.utils.MyResource
@@ -46,7 +45,7 @@ class DriverProfileViewModel @Inject constructor(
     }
 
     private val postFlow = MutableStateFlow<DriverLocationResponse?>(null)
-    fun postLocationDriver(key:String, driverLocationRequest:DriverLocationRequest):MutableStateFlow<DriverLocationResponse?>{
+    fun postLocationDriver(key:String, driverLocationRequest: DriverLocationRequest):MutableStateFlow<DriverLocationResponse?>{
 
         viewModelScope.launch {
             try {

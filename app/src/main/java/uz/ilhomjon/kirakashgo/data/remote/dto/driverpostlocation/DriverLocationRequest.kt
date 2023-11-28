@@ -1,4 +1,4 @@
-package uz.ilhomjon.kirakashgo.data.remote.dto
+package uz.ilhomjon.kirakashgo.data.remote.dto.driverpostlocation
 
 data class DriverLocationRequest(
     val bearing: String,

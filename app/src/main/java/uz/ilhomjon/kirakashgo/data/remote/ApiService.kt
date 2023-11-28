@@ -8,8 +8,8 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
 import uz.ilhomjon.kirakashgo.data.remote.dto.CheckSmsCodeResponse
-import uz.ilhomjon.kirakashgo.data.remote.dto.DriverLocationRequest
-import uz.ilhomjon.kirakashgo.data.remote.dto.DriverLocationResponse
+import uz.ilhomjon.kirakashgo.data.remote.dto.driverpostlocation.DriverLocationRequest
+import uz.ilhomjon.kirakashgo.data.remote.dto.driverpostlocation.DriverLocationResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.LoginDriverResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.driverprofileresponse.DriverProfileResponse
 import uz.ilhomjon.kirakashgo.data.remote.dto.tokenresponse.GetDriveTokenResponse

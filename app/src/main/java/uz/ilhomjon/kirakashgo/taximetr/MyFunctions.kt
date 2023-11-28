@@ -24,7 +24,7 @@ object MyFunctions {
             PendingIntent.getActivity(context, 0, notificationIntent, FLAG_NO_CREATE)
         }
         return Notification.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_background) // Xabarnomaning ikonasi
+            .setSmallIcon(R.mipmap.ic_launcher) // Xabarnomaning ikonasi
             .setContentTitle(title) // Xabarnomaning sarlavhasi
             .setContentText(contentText) // Xabarnomaning matni
             .setContentIntent(pendingIntent)

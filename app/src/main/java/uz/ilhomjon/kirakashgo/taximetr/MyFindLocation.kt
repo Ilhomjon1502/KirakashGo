@@ -6,7 +6,6 @@ import android.location.Location
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -16,17 +15,14 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.tasks.Task
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.ilhomjon.kirakashgo.data.local.sharedpref.MySharedPreference
-import uz.ilhomjon.kirakashgo.data.remote.dto.DriverLocationRequest
-import uz.ilhomjon.kirakashgo.domain.repository.DriverRepository
+import uz.ilhomjon.kirakashgo.data.remote.dto.driverpostlocation.DriverLocationRequest
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverProfileViewModel
-import javax.inject.Inject
 
 private const val TAG = "MyFindLocation"
 
