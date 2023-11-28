@@ -76,6 +76,9 @@ class MenuFragment : Fragment(), CoroutineScope {
         binding.accountCard.setOnClickListener {
             findNavController().navigate(R.id.accountFragment)
         }
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
         return binding.root
     }
 
