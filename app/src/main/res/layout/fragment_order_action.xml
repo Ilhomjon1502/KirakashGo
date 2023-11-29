@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserratsemibold"
             android:gravity="center"
-            android:text="6000"
+            android:text="0000"
             app:layout_constraintVertical_bias="1"
             android:textColor="@color/white"
             android:textSize="80sp"
@@ -42,7 +42,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginBottom="20dp"
             android:fontFamily="@font/montserratbold"
-            android:text="3:54"
+            android:text="00:00"
             android:textColor="@color/white"
             android:textSize="32sp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -143,7 +143,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_description_title" />
 
 
-                <com.google.android.material.button.MaterialButton
+                    <com.google.android.material.button.MaterialButton
                     android:id="@+id/luggage_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

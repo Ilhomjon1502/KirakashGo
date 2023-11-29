@@ -26,9 +26,11 @@ import uz.ilhomjon.kirakashgo.R
 import uz.ilhomjon.kirakashgo.data.local.sharedpref.MySharedPreference
 import uz.ilhomjon.kirakashgo.databinding.FragmentOrderActionBinding
 import uz.ilhomjon.kirakashgo.presentation.common.MyGestureListener
+import uz.ilhomjon.kirakashgo.presentation.models.Order
 import uz.ilhomjon.kirakashgo.presentation.models.OrdersSocketResponse
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverProfileViewModel
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.utils.Status
+import uz.ilhomjon.kirakashgo.taximetr.MyFindLocation
 
 @AndroidEntryPoint
 class OrderActionFragment : Fragment() {
@@ -44,14 +46,43 @@ class OrderActionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        MyFindLocation.orderServiceLiveData.observe(viewLifecycleOwner) {
+            binding.cashTv.text = it.umumiyNarx.toString()
+            val timeMinutes = "${(it.kutishVaqti / 60)} : ${(it.kutishVaqti % 60)}"
+            binding.waitingTime.text = timeMinutes
+        }
 
-        binding.cashTv.text = order.total_sum.toString()
-        binding.waitingTime.text = "00:00"
+        binding.btnWaitSwitch.setOnClickListener {
+            if (MyFindLocation.orderStatus == 1) {
+                if (MyFindLocation.kutishmi) {
+                    binding.btnWaitSwitch.text = "Kutishni boshlash"
+                    MyFindLocation.kutishmi = false
+                } else {
+                    binding.btnWaitSwitch.text = "Kutishni to'xtatish"
+                    MyFindLocation.kutishmi = true
+                }
+            } else {
+                Toast.makeText(
+                    context,
+                    "Buyurtmani avval start qiling\n Klient oldiga yetib boring",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
         binding.homeServiceAddress.text = order.name_startin_place
         binding.tvAddressTo.text = order.destination_name
         binding.tvDescription.text = order.description
-        binding.comfortBtn.isEnabled = order.is_comfort
-        binding.luggageBtn.isEnabled = order.baggage
+        if (order.is_comfort) {
+            binding.comfortBtn.visibility = View.VISIBLE
+        } else {
+            binding.comfortBtn.visibility = View.INVISIBLE
+        }
+        if (order.baggage) {
+            binding.luggageBtn.visibility = View.VISIBLE
+        } else {
+            binding.luggageBtn.visibility = View.INVISIBLE
+        }
         binding.phoneNumber.text = order.client_phone
         binding.phoneNumber.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
@@ -61,14 +92,16 @@ class OrderActionFragment : Fragment() {
         binding.cancelBtn.setOnClickListener {
             val dialog = AlertDialog.Builder(binding.root.context)
             dialog.setTitle("Ogohlantirish")
-            dialog.setMessage("Rostdan ham ${order.id} - buyurtmani bekor qilmoqchimisiz?\n" +
-                    "Agar bekor qilsangiz uni boshqa haydovchilar olib ketishi mumkin")
-            dialog.setPositiveButton("Ha",object : DialogInterface.OnClickListener{
+            dialog.setMessage(
+                "Rostdan ham ${order.id} - buyurtmani bekor qilmoqchimisiz?\n" +
+                        "Agar bekor qilsangiz uni boshqa haydovchilar olib ketishi mumkin"
+            )
+            dialog.setPositiveButton("Ha", object : DialogInterface.OnClickListener {
                 override fun onClick(dialog: DialogInterface?, which: Int) {
                     cancelOrder(order)
                 }
             })
-            dialog.setNegativeButton("Yo'q", object : DialogInterface.OnClickListener{
+            dialog.setNegativeButton("Yo'q", object : DialogInterface.OnClickListener {
                 override fun onClick(dialog: DialogInterface?, which: Int) {
 
                 }
@@ -100,6 +133,7 @@ class OrderActionFragment : Fragment() {
         Log.d("widthLength", "onResume: $viewWidthDp")
         binding.arrowRight.setOnTouchListener { _, event ->
             gestureDetector.onTouchEvent(event)
+            startOrder(order)
             true
         }
     }
@@ -135,6 +169,8 @@ class OrderActionFragment : Fragment() {
 //                            progressDialog.cancel()
 //                            findNavController().popBackStack(R.id.orderActionFragment, true)
                             findNavController().navigate(R.id.homeFragment)
+                            MyFindLocation.orderStatus = 0
+                            MyFindLocation.ordersSocketResponse = null
                         }
 
                         else -> Toast.makeText(context, "Biz bilmagan xatolik", Toast.LENGTH_SHORT)
@@ -145,8 +181,40 @@ class OrderActionFragment : Fragment() {
         }
     }
 
-    private fun startOrder(order: OrdersSocketResponse){
+    private fun startOrder(order: OrdersSocketResponse) {
 
+        GlobalScope.launch(Dispatchers.Main) {
+            viewModel.startOrder(MySharedPreference.token.access, order.id)
+                .collectLatest {
+                    val progressDialog = ProgressDialog(binding.root.context)
+                    when (it?.status) {
+                        Status.LOADING -> {
+                            progressDialog.setMessage(it.message)
+                            progressDialog.show()
+                        }
+
+                        Status.ERROR -> {
+                            progressDialog.cancel()
+                            val dialog = AlertDialog.Builder(binding.root.context)
+                            dialog.setTitle("Xatolik")
+                            dialog.setMessage(it.message)
+                            dialog.show()
+                        }
+
+                        Status.SUCCESS -> {
+                            order.order_status = "start"
+                            MyFindLocation.orderStatus = 1
+                            MyFindLocation.ordersSocketResponse = order
+                        }
+
+                        else -> Toast.makeText(
+                            context,
+                            "Biz xatolikni topa olmadik",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+        }
     }
 
 }

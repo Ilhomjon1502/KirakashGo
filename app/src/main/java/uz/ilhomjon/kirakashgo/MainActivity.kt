@@ -6,11 +6,13 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import com.github.florent37.runtimepermission.kotlin.askPermission
 import dagger.hilt.android.AndroidEntryPoint
+import uz.ilhomjon.kirakashgo.databinding.DialogPermissionBinding
 import uz.ilhomjon.kirakashgo.taximetr.MyLocationService
 import uz.ilhomjon.kirakashgo.taximetr.websocket.MyWebSocketClient
 import java.net.URI
@@ -20,9 +22,37 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        locationService()
+        setPermission()
+        idDialog()
     }
+    fun idDialog(){
+        val alertDialogBuilder = AlertDialog.Builder(this@MainActivity)
+        val dialogView = DialogPermissionBinding.inflate(layoutInflater)
+        alertDialogBuilder.setView(dialogView.root)
+        val dialog = alertDialogBuilder.create()
+        dialog.setCancelable(false)
+        val yourString: String = resources.getString(R.string.dataCollection)
+        dialogView.txtDialog.text = yourString
+        dialogView.textYes.setOnClickListener {
+            locationService()
+            dialog.dismiss()
+        }
+        dialogView.textNo.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+    fun setPermission() {
+        val kl = ActivityResultContracts.RequestMultiplePermissions()
+        val list = arrayOf("android.permission.POST_NOTIFICATIONS","android.permission.ACCESS_FINE_LOCATION")
+        val permissionRequestLauncher =
+            registerForActivityResult(kl) { permissions ->
+                permissions.entries.forEach { _ ->
 
+                }
+            }
+        permissionRequestLauncher.launch(list)
+    }
     fun locationService(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             askPermission(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.FOREGROUND_SERVICE){

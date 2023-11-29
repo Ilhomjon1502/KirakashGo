@@ -16,7 +16,7 @@ data class OrdersSocketResponse(
     val id: Int,
     val is_comfort: Boolean,
     val name_startin_place: String,
-    val order_status: String,
+    var order_status: String,
     val starting_point_lat: String,
     val starting_point_long: String,
     val total_sum: Int,

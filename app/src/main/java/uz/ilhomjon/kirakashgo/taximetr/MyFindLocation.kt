@@ -3,6 +3,7 @@ package uz.ilhomjon.kirakashgo.taximetr
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
+import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
@@ -22,7 +23,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.ilhomjon.kirakashgo.data.local.sharedpref.MySharedPreference
 import uz.ilhomjon.kirakashgo.data.remote.dto.driverpostlocation.DriverLocationRequest
+import uz.ilhomjon.kirakashgo.presentation.models.OrdersSocketResponse
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverProfileViewModel
+import uz.ilhomjon.kirakashgo.taximetr.models.MyOrderService
 
 private const val TAG = "MyFindLocation"
 
@@ -32,10 +35,8 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
     lateinit var locationRequest: LocationRequest
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
-    companion object {
-        val locationLiveData = MutableLiveData<Location>()
-    }
 
+    lateinit var myOrderService: MyOrderService
     var locationCallback = object : LocationCallback() {
         override fun onLocationResult(location: LocationResult) {
             if (location == null) {
@@ -43,7 +44,7 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
             }
             for (location: Location in location.locations) {
                 Log.d(TAG, "onLocationResult: ${location.toString()}")
-                locationLiveData.postValue(location)
+                taximetr(location)
                 GlobalScope.launch(Dispatchers.Main) {
                     try {
                         coroutineScope {
@@ -60,7 +61,7 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
                                 Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
                             }
                         }
-                    }catch (e:Exception){
+                    } catch (e: Exception) {
                         Log.d(TAG, "onLocationResult: ${e.message}")
                         Toast.makeText(
                             context,
@@ -73,14 +74,17 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
         }
     }
 
+    lateinit var handler: Handler
     init {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
         locationRequest = LocationRequest.create()
-        locationRequest.setInterval(10000)
+        locationRequest.setInterval(5000)
         locationRequest.setFastestInterval(5000)
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
 
+        myOrderService = MyOrderService()
         checkSettingsAndStartUpdates()
+        handler = Handler(Looper.getMainLooper())
     }
 
     fun checkSettingsAndStartUpdates() {
@@ -118,5 +122,95 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 
+    companion object {
+        var ordersSocketResponse: OrdersSocketResponse? = null
+        var orderStatus = 0
+        var umumiyNarx = 0
+        var kutishmi = false
+        var kutishVaqti = 0
+        var km = 0.0
+        val orderServiceLiveData = MutableLiveData<MyOrderService>()
+    }
 
+    fun taximetr(location: Location) {
+        if (orderStatus == 1) {
+            if (ordersSocketResponse != null) {
+                if (kutishmi) {
+                    kutishHolatdaHisoblash()
+                } else {
+                    yoldaYurishniHisoblash(location)
+                }
+
+                if (isHandler){
+                    handler.postDelayed(runnable, 1000)
+                    isHandler = false
+                }
+
+            }
+        } else if (orderStatus == 0) {
+            km = 0.0
+            umumiyNarx = 0
+            kutishVaqti = 0
+            kutishmi = false
+        }
+    }
+
+    var beforeLocation: Location? = null
+    fun yoldaYurishniHisoblash(location: Location) {
+        if (beforeLocation == null) {
+            beforeLocation = location
+        } else {
+            km += MyFunctions.distance(
+                beforeLocation!!.latitude,
+                beforeLocation!!.longitude,
+                location.latitude,
+                location.longitude
+            ) / 1000.0
+            beforeLocation = location
+        }
+    }
+
+
+    var isHandler = true
+    fun kutishHolatdaHisoblash() {
+
+    }
+
+    private val runnable = object : Runnable {
+        override fun run() {
+
+            //kutish rejimida
+            if (kutishmi) {
+                kutishVaqti += 1
+            }
+
+            var km2 = km
+            if (km>=1){
+                km2 -=1
+            }
+            if (ordersSocketResponse!!.is_comfort) {
+                umumiyNarx = ((km2) * ordersSocketResponse!!.costs[1].sum_for_per_km
+                        + ordersSocketResponse!!.costs[1].waiting_cost * kutishVaqti / 60
+                        + ordersSocketResponse!!.total_sum)
+                    .toInt()
+            } else {
+                umumiyNarx = ((km2) * ordersSocketResponse!!.costs[0].sum_for_per_km
+                        + ordersSocketResponse!!.costs[0].waiting_cost * kutishVaqti / 60
+                        + ordersSocketResponse!!.total_sum)
+                    .toInt()
+            }
+
+            orderServiceLiveData.postValue(
+                MyOrderService(
+                    orderStatus,
+                    umumiyNarx,
+                    kutishVaqti,
+                    ordersSocketResponse!!.id,
+                    beforeLocation,
+                    km
+                )
+            )
+            handler.postDelayed(this, 1000)
+        }
+    }
 }

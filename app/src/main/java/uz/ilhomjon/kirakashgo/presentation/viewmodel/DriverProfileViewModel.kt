@@ -17,42 +17,46 @@ import uz.ilhomjon.kirakashgo.presentation.viewmodel.utils.MyResource
 import javax.inject.Inject
 
 private const val TAG = "DriverProfileViewModel"
+
 @HiltViewModel
 class DriverProfileViewModel @Inject constructor(
     private val driverRepository: DriverRepository
-):ViewModel() {
-    private val stateFlow=MutableStateFlow<MyResource<DriverProfileResponse>?>(null)
+) : ViewModel() {
+    private val stateFlow = MutableStateFlow<MyResource<DriverProfileResponse>?>(null)
 
-    fun getDriverProfile(apiKey:String):MutableStateFlow<MyResource<DriverProfileResponse>?>{
-            viewModelScope.launch {
-                try {
-                    stateFlow.value = MyResource.loading("Yuklanmoqda")
-                    val flow = driverRepository.getDriverPorfile(apiKey)
-                    flow.collectLatest {
-                        Log.d("DriverProfileViewModel", "getDriverProfile: ${it}")
-                        if (it.isSuccessful){
-                            stateFlow.value = MyResource.success(it.body()!!)
-                        }else{
-                            stateFlow.value = MyResource.error("${it.message()}")
-                        }
+    fun getDriverProfile(apiKey: String): MutableStateFlow<MyResource<DriverProfileResponse>?> {
+        viewModelScope.launch {
+            try {
+                stateFlow.value = MyResource.loading("Yuklanmoqda")
+                val flow = driverRepository.getDriverPorfile(apiKey)
+                flow.collectLatest {
+                    Log.d("DriverProfileViewModel", "getDriverProfile: ${it}")
+                    if (it.isSuccessful) {
+                        stateFlow.value = MyResource.success(it.body()!!)
+                    } else {
+                        stateFlow.value = MyResource.error("${it.message()}")
                     }
-                }catch (e:Exception){
-                    Log.d(TAG, "getDriverProfile: ${e.message}")
-                    stateFlow.value = MyResource.error("Internet bilan bog'liq muammo")
                 }
+            } catch (e: Exception) {
+                Log.d(TAG, "getDriverProfile: ${e.message}")
+                stateFlow.value = MyResource.error("Internet bilan bog'liq muammo")
             }
+        }
         return stateFlow
     }
 
     private val postFlow = MutableStateFlow<DriverLocationResponse?>(null)
-    fun postLocationDriver(key:String, driverLocationRequest: DriverLocationRequest):MutableStateFlow<DriverLocationResponse?>{
+    fun postLocationDriver(
+        key: String,
+        driverLocationRequest: DriverLocationRequest
+    ): MutableStateFlow<DriverLocationResponse?> {
 
         viewModelScope.launch {
             try {
-                val flow=driverRepository.postLocationDriver(key, driverLocationRequest)
+                val flow = driverRepository.postLocationDriver(key, driverLocationRequest)
                 flow.collectLatest {
                     Log.d("DriverProfileViewModel", "getDriverProfile: ${it}")
-                        postFlow.value=it
+                    postFlow.value = it
                 }
             } catch (e: Exception) {
                 Log.d(TAG, "postLocationDriver: ${e.message}")
@@ -66,34 +70,34 @@ class DriverProfileViewModel @Inject constructor(
     //orders
     private val orderAcceptFlow = MutableStateFlow<MyResource<OrderAcceptResponse>?>(null)
     suspend fun acceptOrder(
-        token:String,
-        id:Int
+        token: String,
+        id: Int
     ): MutableStateFlow<MyResource<OrderAcceptResponse>?> {
 
-            orderAcceptFlow.value = MyResource.loading("Buyurtmani olishga harakat qilinmoqda")
-            val flow = driverRepository.acceptOrder(token, id)
-            flow
-                .catch {
-                    Log.d(TAG, "acceptOrder: ${it}")
-                    orderAcceptFlow.value = MyResource.error(it.message)
+        orderAcceptFlow.value = MyResource.loading("Buyurtmani olishga harakat qilinmoqda")
+        val flow = driverRepository.acceptOrder(token, id)
+        flow
+            .catch {
+                Log.d(TAG, "acceptOrder: ${it}")
+                orderAcceptFlow.value = MyResource.error(it.message)
+            }
+            .collectLatest {
+                Log.d(TAG, "acceptOrder: $it")
+                if (it.isSuccessful) {
+                    orderAcceptFlow.value = MyResource.success(it.body()!!)
+                } else {
+                    orderAcceptFlow.value = MyResource.error(it.message())
                 }
-                .collectLatest {
-                    Log.d(TAG, "acceptOrder: $it")
-                    if (it.isSuccessful) {
-                        orderAcceptFlow.value = MyResource.success(it.body()!!)
-                    }else{
-                        orderAcceptFlow.value = MyResource.error(it.message())
-                    }
-                    Log.d(TAG, "acceptOrder: $it")
-                }
+                Log.d(TAG, "acceptOrder: $it")
+            }
 
         return orderAcceptFlow
     }
 
     private val orderCancelFlow = MutableStateFlow<MyResource<OrderAcceptResponse>?>(null)
     suspend fun cancelOrder(
-        token:String,
-        id:Int
+        token: String,
+        id: Int
     ): MutableStateFlow<MyResource<OrderAcceptResponse>?> {
 
         orderCancelFlow.value = MyResource.loading("Buyurtmani bekor qilishga harakat qilinmoqda")
@@ -107,7 +111,7 @@ class DriverProfileViewModel @Inject constructor(
                 Log.d(TAG, "cancelOrder: $it")
                 if (it.isSuccessful) {
                     orderCancelFlow.value = MyResource.success(it.body()!!)
-                }else{
+                } else {
                     orderCancelFlow.value = MyResource.error(it.message())
                 }
                 Log.d(TAG, "cancelOrder: $it")
@@ -118,35 +122,33 @@ class DriverProfileViewModel @Inject constructor(
 
 
     private val orderStartFlow = MutableStateFlow<MyResource<OrderAcceptResponse>?>(null)
-    fun startOrder(
-        token:String,
-        id:Int
+    suspend fun startOrder(
+        token: String,
+        id: Int
     ): MutableStateFlow<MyResource<OrderAcceptResponse>?> {
 
-        viewModelScope.launch {
-            orderStartFlow.value = MyResource.loading("Buyurtmani Start qilishga harakat qilinmoqda")
-            val flow = driverRepository.acceptOrder(token, id)
-            flow
-                .catch {
-                    Log.d("Test", "getDriverToken: ${it.message}")
-                    orderStartFlow.value = MyResource.error(it.message)
+        orderStartFlow.value = MyResource.loading("Buyurtmani Start qilishga harakat qilinmoqda")
+        val flow = driverRepository.startOrder(token, id)
+        flow
+            .catch {
+                Log.d(TAG, "startOrder: $it")
+                orderStartFlow.value = MyResource.error(it.message)
+            }
+            .collectLatest {
+                Log.d(TAG, "startOrder: $it")
+                if (it.isSuccessful) {
+                    orderStartFlow.value = MyResource.success(it.body()!!)
+                } else {
+                    orderStartFlow.value = MyResource.error(it.message())
                 }
-                .collectLatest {
-                    Log.d("Test", "getDriverToken: $it")
-                    if (it.isSuccessful) {
-                        orderStartFlow.value = MyResource.success(it.body()!!)
-                    }else{
-                        orderStartFlow.value = MyResource.error(it.message())
-                    }
-                }
-        }
+            }
         return orderStartFlow
     }
 
     private val orderFinishFlow = MutableStateFlow<MyResource<OrderAcceptResponse>?>(null)
     fun finishOrder(
-        token:String,
-        id:Int
+        token: String,
+        id: Int
     ): MutableStateFlow<MyResource<OrderAcceptResponse>?> {
 
         viewModelScope.launch {
@@ -161,7 +163,7 @@ class DriverProfileViewModel @Inject constructor(
                     Log.d("Test", "getDriverToken: $it")
                     if (it.isSuccessful) {
                         orderFinishFlow.value = MyResource.success(it.body()!!)
-                    }else{
+                    } else {
                         orderFinishFlow.value = MyResource.error(it.message())
                     }
                 }

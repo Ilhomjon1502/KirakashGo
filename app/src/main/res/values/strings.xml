@@ -2,6 +2,7 @@
     <string name="app_name">KirakashGo</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dataCollection">"Dear user, to enhance our app's functionality and overall experience, we kindly request your permission to collect anonymized data from your device. Your valuable input will contribute to refining and optimizing various features. We prioritize your privacy and assure you that all data collected will be handled with the utmost confidentiality. Thank you for your support in making our app even better!"</string>
     <string name="onboarding_welcome">Xush kelibsiz!</string>
     <string name="warning_text">Lorem ipsum dolor sit amet consectetur. Nec ultricies enim a sed elit. Tellus neque sociis sit cursus in mauris id ipsum. Nulla lacinia nunc morbi facilisi. Pretium sit et nunc fermentum.</string>
     <string name="register_info">Ro\'yhatdan o\'tish operatorga telefon qilib yoki officemizga murojaat qilgan holda amalga oshiriladi. \nTelefon raqamingiz biriktiriladi va ushbu raqam bilan login qilib kirishingiz mumkin</string>

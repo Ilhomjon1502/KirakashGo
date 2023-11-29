@@ -38,4 +38,25 @@ object MyFunctions {
             notificationManager.createNotificationChannel(notificationChannel)
         }
     }
+
+    //oradagi masofani aniqlash
+    fun distance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+        val a = (Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + (Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2)))
+        val c = 2 * Math.asin(Math.sqrt(a))
+        val distanceInMeters = Math.round(6371000 * c)
+        return distanceInMeters.toDouble()
+    }
+
+    private fun deg2rad(deg: Double): Double {
+        return deg * Math.PI / 180.0
+    }
+
+    private fun rad2deg(rad: Double): Double {
+        return rad * 180.0 / Math.PI
+    }
 }
