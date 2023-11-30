@@ -2,6 +2,7 @@ package uz.ilhomjon.kirakashgo.taximetr
 
 import android.app.Service
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.activity.viewModels
@@ -27,7 +28,9 @@ class MyLocationService: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         myFindLocation.checkSettingsAndStartUpdates()
-        startForeground(1, MyFunctions.createNotification(applicationContext, "Kirakash go ishlamoqda","To'g'ri ishlashi uchun keshdan tozalamang!!!"))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(1, MyFunctions.createNotification(applicationContext, "Kirakash go ishlamoqda","To'g'ri ishlashi uchun keshdan tozalamang!!!"))
+        }
 
         return START_STICKY
     }

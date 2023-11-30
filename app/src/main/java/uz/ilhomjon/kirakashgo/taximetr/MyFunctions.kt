@@ -9,10 +9,12 @@ import android.app.PendingIntent.FLAG_NO_CREATE
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.annotation.RequiresApi
 import uz.ilhomjon.kirakashgo.MainActivity
 import uz.ilhomjon.kirakashgo.R
 
 object MyFunctions {
+    @RequiresApi(Build.VERSION_CODES.O)
     fun createNotification(context: Context, title: String, contentText: String): Notification {
         val channelId = "my_channel_id" // Unikal kanal identifikatori
         createNotificationChannel(context, channelId, "My Channel")
@@ -21,7 +23,8 @@ object MyFunctions {
         val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.getActivity(context, 0, notificationIntent, FLAG_IMMUTABLE)
         } else {
-            PendingIntent.getActivity(context, 0, notificationIntent, FLAG_NO_CREATE)
+            PendingIntent.getActivity(context, 0, notificationIntent,
+                FLAG_NO_CREATE or FLAG_IMMUTABLE)
         }
         return Notification.Builder(context, channelId)
             .setSmallIcon(R.mipmap.ic_launcher) // Xabarnomaning ikonasi

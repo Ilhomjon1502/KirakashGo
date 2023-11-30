@@ -99,7 +99,7 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
             startLocationUpdates()
         }
         locationSettingsResponseTask.addOnFailureListener {
-            Log.d(TAG, "checkSettingsAndStartUpdates: Error")
+            Log.d("TestService", "checkSettingsAndStartUpdates: ${it.message}")
             Toast.makeText(
                 context,
                 "Xatolik \ncheckSettingsAndStartUpdates",

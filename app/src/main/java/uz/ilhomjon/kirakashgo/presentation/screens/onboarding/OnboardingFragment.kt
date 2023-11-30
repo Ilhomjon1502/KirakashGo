@@ -29,6 +29,7 @@ import uz.ilhomjon.kirakashgo.presentation.viewmodel.utils.Status
 import kotlin.coroutines.CoroutineContext
 
 private const val TAG = "OnboardingFragment"
+
 @AndroidEntryPoint
 class OnboardingFragment : Fragment(), CoroutineScope {
 
@@ -47,6 +48,12 @@ class OnboardingFragment : Fragment(), CoroutineScope {
 
         MySharedPreference.init(binding.root.context)
         val token = MySharedPreference.token
+        val order = MySharedPreference.oder
+        Log.d("KeshOrder", "onCreateView: $order")
+        if (order.order_status != null) {
+            findNavController().navigate(R.id.homeFragment)
+        }
+
         Log.d("Test", "onCreateView: $token")
 
         val navOption = NavOptions.Builder()
@@ -69,13 +76,14 @@ class OnboardingFragment : Fragment(), CoroutineScope {
                         coroutineScope {
                             viewModel.getDriverProfile(apiKey = token.access).collectLatest {
                                 Log.d("MenuFragmentDriverData", "onCreateView: $it")
-                                when(it?.status){
-                                    Status.LOADING->{
+                                when (it?.status) {
+                                    Status.LOADING -> {
                                         binding.nextBtn.isEnabled = false
                                         binding.nextBtn.text = it.message
                                         binding.progressBar.visibility = View.VISIBLE
                                     }
-                                    Status.ERROR->{
+
+                                    Status.ERROR -> {
                                         binding.nextBtn.isEnabled = true
                                         binding.nextBtn.text = "Boshlash"
                                         binding.progressBar.visibility = View.INVISIBLE
@@ -84,7 +92,8 @@ class OnboardingFragment : Fragment(), CoroutineScope {
                                         dialog.setMessage("${it.message}")
                                         dialog.show()
                                     }
-                                    Status.SUCCESS->{
+
+                                    Status.SUCCESS -> {
                                         binding.nextBtn.isEnabled = true
                                         binding.nextBtn.text = "Boshlash"
                                         binding.progressBar.visibility = View.INVISIBLE
@@ -95,7 +104,8 @@ class OnboardingFragment : Fragment(), CoroutineScope {
                                             navOption.build()
                                         )
                                     }
-                                    else->{
+
+                                    else -> {
                                         Toast.makeText(
                                             context,
                                             "Xatolik yuz berdi, nimada ekanlgini topa olmadik\n Iltimos qayta dasturga kiring",
@@ -105,7 +115,7 @@ class OnboardingFragment : Fragment(), CoroutineScope {
                                 }
                             }
                         }
-                    }catch (e:Exception){
+                    } catch (e: Exception) {
                         Log.d(TAG, "onCreateView: ${e.message}")
                         Toast.makeText(context, "Internet bilan muammo", Toast.LENGTH_SHORT).show()
                     }

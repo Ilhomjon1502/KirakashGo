@@ -86,6 +86,7 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
     }
 
     override fun acceptOrder(order: OrdersSocketResponse, itemRv: RvOrderBinding) {
+        MySharedPreference.init(binding.root.context)
         GlobalScope.launch(Dispatchers.Main) {
             viewModel.acceptOrder(MySharedPreference.token.access, order.id)
                 .collectLatest {
@@ -94,6 +95,8 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
                             binding.rv.isEnabled = false
                             itemRv.btnAccept.text = it.message
                             itemRv.progressBar.visibility = View.VISIBLE
+                            Log.d("KeshOrder", "acceptOrder: ${it.data}")
+                            MySharedPreference.oder=it.data!!
                         }
                         Status.ERROR->{
                             binding.rv.isEnabled = true
@@ -119,6 +122,6 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
                 }
         }
     }
-
-
 }
+
+//40.36499326373501, 71.77504958272756
