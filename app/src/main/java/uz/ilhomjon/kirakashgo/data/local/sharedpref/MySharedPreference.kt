@@ -37,24 +37,15 @@ object MySharedPreference {
 
     private fun jsonToToken(str: String): GetDriveTokenResponse {
         val gson = Gson()
-        val type = object : TypeToken<GetDriveTokenResponse>(){}.type
+        val type = object : TypeToken<GetDriveTokenResponse>() {}.type
         return gson.fromJson(str, type)
     }
 
 
-
-    var oder:OrderAcceptResponse
-        get() = jsonToOrder(preferences.getString("order", "{}")!!)
+    var oder: String
+        get() = preferences.getString("order", "0")!!
         set(value) = preferences.edit {
-            it.putString("order", orderToJson(value))
+            it.putString("order", value)
         }
-    private fun jsonToOrder(str:String):OrderAcceptResponse{
-        val gson=Gson()
-        val type=object : TypeToken<OrderAcceptResponse>(){}.type
-        return gson.fromJson(str, type)
-    }
 
-    private fun orderToJson(order:OrderAcceptResponse):String{
-        return Gson().toJson(oder)
-    }
 }

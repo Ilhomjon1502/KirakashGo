@@ -35,11 +35,12 @@ import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverProfileViewModel
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.utils.Status
 import uz.ilhomjon.kirakashgo.taximetr.websocket.MyWebSocketClient
 import java.net.URI
+
 @AndroidEntryPoint
 class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
 
     private val binding by lazy { FragmentHomeBinding.inflate(layoutInflater) }
-    private val viewModel:DriverProfileViewModel by viewModels()
+    private val viewModel: DriverProfileViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -62,10 +63,10 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
     }
 
 
-
-    fun connectWebSocket(){
+    fun connectWebSocket() {
         MySharedPreference.init(binding.root.context)
-        val serverUri = URI("ws://147.182.206.31/ws/orders/?token=${MySharedPreference.token.access}") // Websocket server manzili
+        val serverUri =
+            URI("ws://147.182.206.31/ws/orders/?token=${MySharedPreference.token.access}") // Websocket server manzili
         val client = MyWebSocketClient(serverUri)
 
         val orderAdapter = OrderHomeRvAdapter(this)
@@ -74,7 +75,7 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
             client.connect() // Websocketni ulash
             Toast.makeText(context, "Buyurtmalarni ko'rish boshlandi", Toast.LENGTH_SHORT).show()
 
-            MyWebSocketClient.ordersLiveData.observe(viewLifecycleOwner){
+            MyWebSocketClient.ordersLiveData.observe(viewLifecycleOwner) {
                 orderAdapter.list.clear()
                 orderAdapter.list.addAll(it)
                 orderAdapter.notifyDataSetChanged()
@@ -90,15 +91,14 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
         GlobalScope.launch(Dispatchers.Main) {
             viewModel.acceptOrder(MySharedPreference.token.access, order.id)
                 .collectLatest {
-                    when(it?.status){
-                        Status.LOADING->{
+                    when (it?.status) {
+                        Status.LOADING -> {
                             binding.rv.isEnabled = false
                             itemRv.btnAccept.text = it.message
                             itemRv.progressBar.visibility = View.VISIBLE
-                            Log.d("KeshOrder", "acceptOrder: ${it.data}")
-                            MySharedPreference.oder=it.data!!
                         }
-                        Status.ERROR->{
+
+                        Status.ERROR -> {
                             binding.rv.isEnabled = true
                             itemRv.btnAccept.text = "Qabul qilish"
                             itemRv.progressBar.visibility = View.INVISIBLE
@@ -107,16 +107,24 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
                             dialog.setMessage(it.toString())
                             dialog.show()
                         }
-                        Status.SUCCESS->{
+
+                        Status.SUCCESS -> {
                             binding.rv.isEnabled = true
                             itemRv.btnAccept.text = "Qabul qilish"
                             itemRv.progressBar.visibility = View.INVISIBLE
                             OrdersSocketResponse.order = order
-
+                            MySharedPreference.oder = "1"
+                            Log.d("KeshOrder", "acceptOrder: ${MySharedPreference.oder}")
+                            Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
 //                            findNavController().popBackStack(R.id.homeFragment, true)
                             findNavController().navigate(R.id.orderActionFragment)
                         }
-                        else-> Toast.makeText(context, "Xatolikni topa olmadik", Toast.LENGTH_SHORT)
+
+                        else -> Toast.makeText(
+                            context,
+                            "Xatolikni topa olmadik",
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                     }
                 }
