@@ -50,8 +50,8 @@ class OnboardingFragment : Fragment(), CoroutineScope {
         val token = MySharedPreference.token
         val order = MySharedPreference.oder
         Log.d("KeshOrder", "onCreateView: $order")
-        if (order != "0") {
-            findNavController().navigate(R.id.homeFragment)
+        if (order != null) {
+            findNavController().navigate(R.id.orderActionFragment)
         }
 
         Log.d("Test", "onCreateView: $token")

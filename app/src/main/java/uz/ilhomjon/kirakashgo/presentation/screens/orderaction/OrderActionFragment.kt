@@ -39,12 +39,19 @@ class OrderActionFragment : Fragment() {
     private lateinit var gestureDetector: GestureDetectorCompat
     private var initialX = 0f // Initial X position of the ImageView
     private val viewModel: DriverProfileViewModel by viewModels()
-    var order = OrdersSocketResponse.order
+    lateinit var order: OrdersSocketResponse
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        MySharedPreference.init(binding.root.context)
+        order = MySharedPreference.oder!!
+        Log.d("startOrder", "onCreateView: $order")
+        if (MySharedPreference.oder!!.order_status == "start") {
+            binding.arrowRight.visibility = View.GONE
+        }
 
         MyFindLocation.orderServiceLiveData.observe(viewLifecycleOwner) {
             binding.cashTv.text = it.umumiyNarx.toString()
@@ -202,9 +209,12 @@ class OrderActionFragment : Fragment() {
                         }
 
                         Status.SUCCESS -> {
-                            order.order_status = "start"
                             MyFindLocation.orderStatus = 1
                             MyFindLocation.ordersSocketResponse = order
+                            Log.d("MyStartOrder", "startOrder: ${order}")
+                            order.order_status = "start"
+                            MySharedPreference.oder=order
+                            Log.d("MyStartOrder", "startOrder: ${MySharedPreference.oder}")
                         }
 
                         else -> Toast.makeText(

@@ -113,7 +113,7 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
                             itemRv.btnAccept.text = "Qabul qilish"
                             itemRv.progressBar.visibility = View.INVISIBLE
                             OrdersSocketResponse.order = order
-                            MySharedPreference.oder = "1"
+                            MySharedPreference.oder = order
                             Log.d("KeshOrder", "acceptOrder: ${MySharedPreference.oder}")
                             Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
 //                            findNavController().popBackStack(R.id.homeFragment, true)

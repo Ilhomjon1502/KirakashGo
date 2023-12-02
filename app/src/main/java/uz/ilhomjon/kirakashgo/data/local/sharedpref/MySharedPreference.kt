@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import uz.ilhomjon.kirakashgo.data.remote.dto.tokenresponse.GetDriveTokenResponse
-import uz.ilhomjon.kirakashgo.presentation.models.OrderAcceptResponse
 import uz.ilhomjon.kirakashgo.presentation.models.OrdersSocketResponse
 
 object MySharedPreference {
@@ -37,15 +36,24 @@ object MySharedPreference {
 
     private fun jsonToToken(str: String): GetDriveTokenResponse {
         val gson = Gson()
-        val type = object : TypeToken<GetDriveTokenResponse>() {}.type
+        val type = object : TypeToken<GetDriveTokenResponse>(){}.type
         return gson.fromJson(str, type)
     }
 
 
-    var oder: String
-        get() = preferences.getString("order", "0")!!
-        set(value) = preferences.edit {
-            it.putString("order", value)
-        }
 
+    var oder:OrdersSocketResponse?
+        get() = jsonToOrder(preferences.getString("order", "{}"))
+        set(value) = preferences.edit {
+            it.putString("order", orderToJson(value))
+        }
+    private fun jsonToOrder(str:String?):OrdersSocketResponse{
+        val gson=Gson()
+        val type=object : TypeToken<OrdersSocketResponse>(){}.type
+        return gson.fromJson(str, type)
+    }
+
+    private fun orderToJson(orderSocket: OrdersSocketResponse?):String{
+        return Gson().toJson(orderSocket)
+    }
 }
