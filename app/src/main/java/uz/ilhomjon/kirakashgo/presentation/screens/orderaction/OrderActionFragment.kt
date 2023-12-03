@@ -1,3 +1,5 @@
+@file:OptIn(DelicateCoroutinesApi::class)
+
 package uz.ilhomjon.kirakashgo.presentation.screens.orderaction
 
 import android.annotation.SuppressLint
@@ -18,12 +20,16 @@ import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.ilhomjon.kirakashgo.R
 import uz.ilhomjon.kirakashgo.data.local.sharedpref.MySharedPreference
+import uz.ilhomjon.kirakashgo.data.remote.dto.tokenresponse.GetDriveTokenResponse
 import uz.ilhomjon.kirakashgo.databinding.FragmentOrderActionBinding
 import uz.ilhomjon.kirakashgo.presentation.common.MyGestureListener
 import uz.ilhomjon.kirakashgo.presentation.models.Order
@@ -31,9 +37,11 @@ import uz.ilhomjon.kirakashgo.presentation.models.OrdersSocketResponse
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverProfileViewModel
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.utils.Status
 import uz.ilhomjon.kirakashgo.taximetr.MyFindLocation
+import kotlin.coroutines.CoroutineContext
 
+@Suppress("DEPRECATION")
 @AndroidEntryPoint
-class OrderActionFragment : Fragment() {
+class OrderActionFragment : Fragment(), CoroutineScope {
 
     private val binding by lazy { FragmentOrderActionBinding.inflate(layoutInflater) }
     private lateinit var gestureDetector: GestureDetectorCompat
@@ -41,10 +49,11 @@ class OrderActionFragment : Fragment() {
     private val viewModel: DriverProfileViewModel by viewModels()
     lateinit var order: OrdersSocketResponse
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         MySharedPreference.init(binding.root.context)
         order = MySharedPreference.oder!!
@@ -143,6 +152,15 @@ class OrderActionFragment : Fragment() {
             startOrder(order)
             true
         }
+
+
+        MySharedPreference.init(binding.root.context)
+        val token = MySharedPreference.token
+
+        binding.comeText.setOnClickListener {
+            Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show()
+            finishOrder(token)
+        }
     }
 
     private fun pxToDp(px: Int): Float {
@@ -150,6 +168,7 @@ class OrderActionFragment : Fragment() {
         return px / density
     }
 
+    @SuppressLint("SetTextI18n")
     private fun cancelOrder(order: OrdersSocketResponse) {
         GlobalScope.launch(Dispatchers.Main) {
             viewModel.cancelOrder(MySharedPreference.token.access, order.id)
@@ -188,6 +207,7 @@ class OrderActionFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun startOrder(order: OrdersSocketResponse) {
 
         GlobalScope.launch(Dispatchers.Main) {
@@ -213,7 +233,9 @@ class OrderActionFragment : Fragment() {
                             MyFindLocation.ordersSocketResponse = order
                             Log.d("MyStartOrder", "startOrder: ${order}")
                             order.order_status = "start"
-                            MySharedPreference.oder=order
+                            MySharedPreference.oder = order
+                            binding.comeText.isEnabled = true
+                            binding.comeText.text = "Yakunlash"
                             Log.d("MyStartOrder", "startOrder: ${MySharedPreference.oder}")
                         }
 
@@ -226,5 +248,37 @@ class OrderActionFragment : Fragment() {
                 }
         }
     }
+
+
+    private fun finishOrder(tokenResponse: GetDriveTokenResponse) {
+        launch(Dispatchers.Main) {
+            viewModel.finishOrder(tokenResponse.access, order.id).collectLatest {
+                when (it?.status) {
+                    Status.LOADING -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                        Log.d("FinishOrder", "onResume: Loading...")
+                    }
+
+                    Status.ERROR -> {
+                        binding.progressBar.visibility = View.GONE
+                        Log.d("FinishOrder", "onResume: ${it.message}")
+                    }
+
+                    Status.SUCCESS -> {
+                        binding.progressBar.visibility = View.GONE
+                        Log.d("FinishOrder", "onResume: $it")
+                        findNavController().popBackStack()
+                        val tempOrder: OrdersSocketResponse? = null
+                        MySharedPreference.oder = tempOrder
+                    }
+
+                    null -> Log.d("FinishOrder", "finishOrder: Nomalum xatolik")
+                }
+            }
+        }
+    }
+
+    override val coroutineContext: CoroutineContext
+        get() = Job()
 
 }

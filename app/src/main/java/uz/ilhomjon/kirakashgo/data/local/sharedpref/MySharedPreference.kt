@@ -47,13 +47,13 @@ object MySharedPreference {
         set(value) = preferences.edit {
             it.putString("order", orderToJson(value))
         }
-    private fun jsonToOrder(str:String?):OrdersSocketResponse{
+    private fun jsonToOrder(str:String?):OrdersSocketResponse?{
         val gson=Gson()
         val type=object : TypeToken<OrdersSocketResponse>(){}.type
         return gson.fromJson(str, type)
     }
 
-    private fun orderToJson(orderSocket: OrdersSocketResponse?):String{
+    private fun orderToJson(orderSocket: OrdersSocketResponse?):String?{
         return Gson().toJson(orderSocket)
     }
 }
