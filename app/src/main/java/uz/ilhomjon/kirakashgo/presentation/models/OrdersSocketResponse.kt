@@ -7,8 +7,8 @@ data class OrdersSocketResponse(
     val costs: List<Cost>,
     val date: String,
     val description: String,
-    val destination_lat: String,
-    val destination_long: String,
+    var destination_lat: String,
+    var destination_long: String,
     val destination_name: String,
     val driver: Any,
     val for_women: Boolean,
@@ -19,7 +19,7 @@ data class OrdersSocketResponse(
     var order_status: String,
     val starting_point_lat: String,
     val starting_point_long: String,
-    val total_sum: Int,
+    var total_sum: Int,
     val waiting_seconds: Int
 ){
     companion object{

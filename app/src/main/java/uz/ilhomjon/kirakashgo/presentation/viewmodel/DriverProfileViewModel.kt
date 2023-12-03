@@ -146,28 +146,29 @@ class DriverProfileViewModel @Inject constructor(
     }
 
     private val orderFinishFlow = MutableStateFlow<MyResource<OrderAcceptResponse>?>(null)
-    fun finishOrder(
+    suspend fun finishOrder(
         token: String,
-        id: Int
+        id: Int,
+        des_lat: String,
+        des_long: String,
+        total_sum: String
     ): MutableStateFlow<MyResource<OrderAcceptResponse>?> {
 
-        viewModelScope.launch {
             orderFinishFlow.value = MyResource.loading("Buyurtmani tugatishga harakat qilinmoqda")
-            val flow = driverRepository.acceptOrder(token, id)
+            val flow = driverRepository.finishOrder(token, id, des_lat, des_long, total_sum)
             flow
                 .catch {
-                    Log.d("Test", "getDriverToken: ${it.message}")
+                    Log.d(TAG, "finishOrder: $it")
                     orderFinishFlow.value = MyResource.error(it.message)
                 }
                 .collectLatest {
-                    Log.d("Test", "getDriverToken: $it")
+                    Log.d(TAG, "finishOrder: $it")
                     if (it.isSuccessful) {
                         orderFinishFlow.value = MyResource.success(it.body()!!)
                     } else {
                         orderFinishFlow.value = MyResource.error(it.message())
                     }
                 }
-        }
         return orderFinishFlow
     }
 }

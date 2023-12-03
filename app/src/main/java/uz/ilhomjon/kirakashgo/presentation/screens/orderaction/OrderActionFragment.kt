@@ -63,6 +63,9 @@ class OrderActionFragment : Fragment(), CoroutineScope {
         }
 
         MyFindLocation.orderServiceLiveData.observe(viewLifecycleOwner) {
+            order.total_sum = it.umumiyNarx
+            order.destination_lat = it.lastLatLng?.latitude.toString()
+            order.destination_long = it.lastLatLng?.longitude.toString()
             binding.cashTv.text = it.umumiyNarx.toString()
             val timeMinutes = "${(it.kutishVaqti / 60)} : ${(it.kutishVaqti % 60)}"
             binding.waitingTime.text = timeMinutes
@@ -158,7 +161,6 @@ class OrderActionFragment : Fragment(), CoroutineScope {
         val token = MySharedPreference.token
 
         binding.comeText.setOnClickListener {
-            Toast.makeText(context, "Click", Toast.LENGTH_SHORT).show()
             finishOrder(token)
         }
     }
@@ -252,7 +254,7 @@ class OrderActionFragment : Fragment(), CoroutineScope {
 
     private fun finishOrder(tokenResponse: GetDriveTokenResponse) {
         launch(Dispatchers.Main) {
-            viewModel.finishOrder(tokenResponse.access, order.id).collectLatest {
+            viewModel.finishOrder(tokenResponse.access, order.id, order.destination_lat, order.destination_long, order.total_sum.toString()).collectLatest {
                 when (it?.status) {
                     Status.LOADING -> {
                         binding.progressBar.visibility = View.VISIBLE
@@ -267,12 +269,17 @@ class OrderActionFragment : Fragment(), CoroutineScope {
                     Status.SUCCESS -> {
                         binding.progressBar.visibility = View.GONE
                         Log.d("FinishOrder", "onResume: $it")
+                        Toast.makeText(
+                            context,
+                            "Finish order ${it.data?.success}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         findNavController().popBackStack()
                         val tempOrder: OrdersSocketResponse? = null
                         MySharedPreference.oder = tempOrder
                     }
 
-                    null -> Log.d("FinishOrder", "finishOrder: Nomalum xatolik")
+                    null -> Log.d("FinishOrder", "finishOrder: Nomalum xatolik $it")
                 }
             }
         }
