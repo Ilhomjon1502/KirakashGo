@@ -16,9 +16,12 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.tasks.Task
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.ilhomjon.kirakashgo.data.local.sharedpref.MySharedPreference
@@ -26,8 +29,9 @@ import uz.ilhomjon.kirakashgo.data.remote.dto.driverpostlocation.DriverLocationR
 import uz.ilhomjon.kirakashgo.presentation.models.OrdersSocketResponse
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.DriverProfileViewModel
 import uz.ilhomjon.kirakashgo.taximetr.models.MyOrderService
+import uz.ilhomjon.kirakashgo.utils.Resource
 
-private const val TAG = "MyFindLocation"
+const val TAG = "MyFindLocation"
 
 //@AndroidEntryPoint
 class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel) {
@@ -35,6 +39,8 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
     lateinit var locationRequest: LocationRequest
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
+
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     lateinit var myOrderService: MyOrderService
     var locationCallback = object : LocationCallback() {
@@ -45,36 +51,32 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
             for (location: Location in location.locations) {
                 Log.d(TAG, "GetCurrentLocation: ${location.toString()}")
                 taximetr(location)
-                GlobalScope.launch(Dispatchers.Main) {
-                    try {
-                        coroutineScope {
-                            MySharedPreference.init(context)
-                            viewModel.postLocationDriver(
-                                MySharedPreference.token.access,
-                                DriverLocationRequest(
-                                    location.bearing.toString(),
-                                    location.latitude.toString(),
-                                    location.longitude.toString()
-                                )
-                            ).collectLatest {
-                                Log.d(TAG, "GetResponseLocation: PostLocationDriver $it")
-                                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    } catch (e: Exception) {
-                        Log.d(TAG, "onLocationResult: ${e.message}")
-                        Toast.makeText(
-                            context,
-                            "Location bazaga jo'natilmayapti",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                scope.launch() {
+//                    try {
+                    MySharedPreference.init(context)
+                    viewModel.postLocationDriver(
+                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNjgyNDM5LCJpYXQiOjE3MDExNDY0MzksImp0aSI6IjRiMWYyYTc1ZWVlMDRiOGQ4MDE4YzE3YTExOWMxMjc0IiwidXNlcl9pZCI6MTd9.1guYAWmM9J0laAb9CIVuyOVaKVe9mqslRXRD76BVAE0",
+                        DriverLocationRequest(
+                            location.bearing.toString(),
+                            location.latitude.toString(),
+                            location.longitude.toString()
+                        )
+                    )
+//                    } catch (e: Exception) {
+//                        Log.d(TAG, "onLocationResult: ${e.message}")
+//                        Toast.makeText(
+//                            context,
+//                            "Location bazaga jo'natilmayapti",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
                 }
             }
         }
     }
 
     lateinit var handler: Handler
+
     init {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
         locationRequest = LocationRequest.create()
@@ -141,7 +143,7 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
                     yoldaYurishniHisoblash(location)
                 }
 
-                if (isHandler){
+                if (isHandler) {
                     handler.postDelayed(runnable, 1000)
                     isHandler = false
                 }
@@ -185,8 +187,8 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
             }
 
             var km2 = km
-            if (km>=1){
-                km2 -=1
+            if (km >= 1) {
+                km2 -= 1
             }
             if (ordersSocketResponse!!.is_comfort) {
                 umumiyNarx = ((km2) * ordersSocketResponse!!.costs[1].sum_for_per_km

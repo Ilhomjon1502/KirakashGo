@@ -36,6 +36,7 @@ import uz.ilhomjon.kirakashgo.presentation.viewmodel.utils.Status
 import uz.ilhomjon.kirakashgo.taximetr.websocket.MyWebSocketClient
 import java.net.URI
 
+private const val TAG = "HomeFragment"
 @AndroidEntryPoint
 class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
 
@@ -115,6 +116,7 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
                             OrdersSocketResponse.order = order
                             MySharedPreference.oder = order
                             Log.d("KeshOrder", "acceptOrder: ${MySharedPreference.oder}")
+                            Log.d(TAG, "acceptOrder: $it")
                             Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
 //                            findNavController().popBackStack(R.id.homeFragment, true)
                             findNavController().navigate(R.id.orderActionFragment)

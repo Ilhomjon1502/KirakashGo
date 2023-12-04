@@ -24,7 +24,17 @@
         <service
             android:name=".taximetr.MyLocationService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="false"
+            android:foregroundServiceType="dataSync|location"
+            android:label="RestartServiceWhenStopped"
+            android:process=":EndlessService"
+            android:stopWithTask="false"/>
+
+        <receiver
+            android:name=".taximetr.taxi2.LockerRestarterBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="RestartServiceWhenStopped" />
 
         <activity
             android:name=".MainActivity"
@@ -32,7 +42,6 @@
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

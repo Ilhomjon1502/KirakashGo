@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -14,6 +15,7 @@ import uz.ilhomjon.kirakashgo.data.remote.dto.driverprofileresponse.DriverProfil
 import uz.ilhomjon.kirakashgo.domain.repository.DriverRepository
 import uz.ilhomjon.kirakashgo.presentation.models.OrderAcceptResponse
 import uz.ilhomjon.kirakashgo.presentation.viewmodel.utils.MyResource
+import uz.ilhomjon.kirakashgo.utils.Resource
 import javax.inject.Inject
 
 private const val TAG = "DriverProfileViewModel"
@@ -45,25 +47,22 @@ class DriverProfileViewModel @Inject constructor(
         return stateFlow
     }
 
-    private val postFlow = MutableStateFlow<DriverLocationResponse?>(null)
+    private val _postFlow = MutableStateFlow<Resource<DriverLocationResponse?>>(Resource.Loading())
+    val postFlow = _postFlow.asStateFlow()
     fun postLocationDriver(
         key: String,
         driverLocationRequest: DriverLocationRequest
-    ): MutableStateFlow<DriverLocationResponse?> {
+    ) {
 
         viewModelScope.launch {
-            try {
-                val flow = driverRepository.postLocationDriver(key, driverLocationRequest)
-                flow.collectLatest {
+            driverRepository.postLocationDriver(key, driverLocationRequest)
+                .collect {
                     Log.d("DriverProfileViewModel", "getDriverProfile: ${it}")
-                    postFlow.value = it
+                    if (it.isSuccessful) {
+                        _postFlow.emit(Resource.Success(it.body()))
+                    }
                 }
-            } catch (e: Exception) {
-                Log.d(TAG, "postLocationDriver: ${e.message}")
-            }
         }
-
-        return postFlow
     }
 
 
@@ -154,21 +153,21 @@ class DriverProfileViewModel @Inject constructor(
         total_sum: String
     ): MutableStateFlow<MyResource<OrderAcceptResponse>?> {
 
-            orderFinishFlow.value = MyResource.loading("Buyurtmani tugatishga harakat qilinmoqda")
-            val flow = driverRepository.finishOrder(token, id, des_lat, des_long, total_sum)
-            flow
-                .catch {
-                    Log.d(TAG, "finishOrder: $it")
-                    orderFinishFlow.value = MyResource.error(it.message)
+        orderFinishFlow.value = MyResource.loading("Buyurtmani tugatishga harakat qilinmoqda")
+        val flow = driverRepository.finishOrder(token, id, des_lat, des_long, total_sum)
+        flow
+            .catch {
+                Log.d(TAG, "finishOrder: $it")
+                orderFinishFlow.value = MyResource.error(it.message)
+            }
+            .collectLatest {
+                Log.d(TAG, "finishOrder: $it")
+                if (it.isSuccessful) {
+                    orderFinishFlow.value = MyResource.success(it.body()!!)
+                } else {
+                    orderFinishFlow.value = MyResource.error(it.message())
                 }
-                .collectLatest {
-                    Log.d(TAG, "finishOrder: $it")
-                    if (it.isSuccessful) {
-                        orderFinishFlow.value = MyResource.success(it.body()!!)
-                    } else {
-                        orderFinishFlow.value = MyResource.error(it.message())
-                    }
-                }
+            }
         return orderFinishFlow
     }
 }

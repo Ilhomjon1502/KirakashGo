@@ -39,8 +39,10 @@ class DriverRepository @Inject constructor(
     suspend fun postLocationDriver(
         apiKey: String,
         driverLocationRequest: DriverLocationRequest
-    ): Flow<DriverLocationResponse> =
-        flow { emit(apiService.driverLocation("Bearer " + apiKey, driverLocationRequest)) }
+    ) = flow { emit(apiService.driverLocation("Bearer " + apiKey, driverLocationRequest)) }
+
+
+
 
     //orders
     suspend fun acceptOrder(apiKey: String, id: Int): Flow<Response<OrderAcceptResponse>> =

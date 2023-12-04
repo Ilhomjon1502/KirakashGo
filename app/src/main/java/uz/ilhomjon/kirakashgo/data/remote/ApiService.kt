@@ -54,7 +54,7 @@ interface ApiService {
         @Query("order_id") order_id: Int
     ):Response<OrderAcceptResponse>
 
-    @PUT("drivers/finish_order/")
+    @PUT("drivers/finish_order")
     suspend fun finishOrder(
         @Header("Authorization") token: String,
         @Query("order_id") order_id: Int,
@@ -69,7 +69,7 @@ interface ApiService {
     suspend fun driverLocation(
         @Header("Authorization") token: String,
         @Body driverLocationRequest: DriverLocationRequest
-    ): DriverLocationResponse
+    ): Response<DriverLocationResponse>
 
     //PROFILE
     @GET("drivers/profil/")

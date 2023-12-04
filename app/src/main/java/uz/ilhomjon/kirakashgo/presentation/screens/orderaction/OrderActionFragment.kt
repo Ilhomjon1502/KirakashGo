@@ -39,6 +39,7 @@ import uz.ilhomjon.kirakashgo.presentation.viewmodel.utils.Status
 import uz.ilhomjon.kirakashgo.taximetr.MyFindLocation
 import kotlin.coroutines.CoroutineContext
 
+private const val TAG = "OrderActionFragment"
 @Suppress("DEPRECATION")
 @AndroidEntryPoint
 class OrderActionFragment : Fragment(), CoroutineScope {
@@ -233,7 +234,7 @@ class OrderActionFragment : Fragment(), CoroutineScope {
                         Status.SUCCESS -> {
                             MyFindLocation.orderStatus = 1
                             MyFindLocation.ordersSocketResponse = order
-                            Log.d("MyStartOrder", "startOrder: ${order}")
+                            Log.d(TAG, "startOrder: $it")
                             order.order_status = "start"
                             MySharedPreference.oder = order
                             binding.comeText.isEnabled = true
@@ -258,17 +259,21 @@ class OrderActionFragment : Fragment(), CoroutineScope {
                 when (it?.status) {
                     Status.LOADING -> {
                         binding.progressBar.visibility = View.VISIBLE
-                        Log.d("FinishOrder", "onResume: Loading...")
+                        Log.d(TAG, "finishOrder: $it")
                     }
 
                     Status.ERROR -> {
                         binding.progressBar.visibility = View.GONE
-                        Log.d("FinishOrder", "onResume: ${it.message}")
+                        Log.d(TAG, "finishOrder: $it")
+                        val dialog = AlertDialog.Builder(binding.root.context)
+                        dialog.setTitle("Xatolik")
+                        dialog.setMessage(it.toString())
+                        dialog.show()
                     }
 
                     Status.SUCCESS -> {
                         binding.progressBar.visibility = View.GONE
-                        Log.d("FinishOrder", "onResume: $it")
+                        Log.d(TAG, "finishOrder: $it")
                         Toast.makeText(
                             context,
                             "Finish order ${it.data?.success}",
