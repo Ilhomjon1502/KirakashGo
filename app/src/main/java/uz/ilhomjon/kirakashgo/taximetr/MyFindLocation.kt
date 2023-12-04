@@ -43,7 +43,7 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
                 return
             }
             for (location: Location in location.locations) {
-                Log.d(TAG, "onLocationResult: ${location.toString()}")
+                Log.d(TAG, "GetCurrentLocation: ${location.toString()}")
                 taximetr(location)
                 GlobalScope.launch(Dispatchers.Main) {
                     try {
@@ -57,7 +57,7 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
                                     location.longitude.toString()
                                 )
                             ).collectLatest {
-                                Log.d(TAG, "onLocationResult: PostLocationDriver $it")
+                                Log.d(TAG, "GetResponseLocation: PostLocationDriver $it")
                                 Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
                             }
                         }
