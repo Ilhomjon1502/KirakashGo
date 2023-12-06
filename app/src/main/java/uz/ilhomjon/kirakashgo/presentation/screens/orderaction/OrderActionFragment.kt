@@ -217,16 +217,17 @@ class OrderActionFragment : Fragment(), CoroutineScope {
         GlobalScope.launch(Dispatchers.Main) {
             viewModel.startOrder(MySharedPreference.token.access, order.id)
                 .collectLatest {
-                    val progressDialog = ProgressDialog(binding.root.context)
+//                    val progressDialog = ProgressDialog(binding.root.context)
+                    val dialog = AlertDialog.Builder(binding.root.context)
                     when (it?.status) {
                         Status.LOADING -> {
-                            progressDialog.setMessage(it.message)
-                            progressDialog.show()
+//                            progressDialog.setMessage(it.message)
+//                            progressDialog.show()
+
                         }
 
                         Status.ERROR -> {
-                            progressDialog.cancel()
-                            val dialog = AlertDialog.Builder(binding.root.context)
+//                            progressDialog.cancel()
                             dialog.setTitle("Xatolik")
                             dialog.setMessage(it.message)
                             dialog.show()

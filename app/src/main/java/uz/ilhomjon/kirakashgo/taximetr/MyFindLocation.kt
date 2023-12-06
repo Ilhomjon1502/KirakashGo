@@ -49,13 +49,13 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
                 return
             }
             for (location: Location in location.locations) {
-                Log.d(TAG, "GetCurrentLocation: ${location.toString()}")
+//                Log.d(TAG, "GetCurrentLocation: ${location.toString()}")
                 taximetr(location)
                 scope.launch() {
 //                    try {
                     MySharedPreference.init(context)
                     viewModel.postLocationDriver(
-                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMyNjgyNDM5LCJpYXQiOjE3MDExNDY0MzksImp0aSI6IjRiMWYyYTc1ZWVlMDRiOGQ4MDE4YzE3YTExOWMxMjc0IiwidXNlcl9pZCI6MTd9.1guYAWmM9J0laAb9CIVuyOVaKVe9mqslRXRD76BVAE0",
+                        MySharedPreference.token.access,
                         DriverLocationRequest(
                             location.bearing.toString(),
                             location.latitude.toString(),
