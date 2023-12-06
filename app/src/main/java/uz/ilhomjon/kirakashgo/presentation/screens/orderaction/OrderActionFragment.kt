@@ -25,6 +25,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import uz.ilhomjon.kirakashgo.R
@@ -40,6 +41,7 @@ import uz.ilhomjon.kirakashgo.taximetr.MyFindLocation
 import kotlin.coroutines.CoroutineContext
 
 private const val TAG = "OrderActionFragment"
+
 @Suppress("DEPRECATION")
 @AndroidEntryPoint
 class OrderActionFragment : Fragment(), CoroutineScope {
@@ -163,7 +165,7 @@ class OrderActionFragment : Fragment(), CoroutineScope {
         val token = MySharedPreference.token
 
         binding.comeText.setOnClickListener {
-            finishOrder(token)
+            finishOrder(order)
         }
     }
 
@@ -215,8 +217,8 @@ class OrderActionFragment : Fragment(), CoroutineScope {
     private fun startOrder(order: OrdersSocketResponse) {
 
         GlobalScope.launch(Dispatchers.Main) {
-            viewModel.startOrder(MySharedPreference.token.access, order.id)
-                .collectLatest {
+            viewModel.startOrder("${MySharedPreference.token.access}", id = order.id)
+                .collect {
 //                    val progressDialog = ProgressDialog(binding.root.context)
                     val dialog = AlertDialog.Builder(binding.root.context)
                     when (it?.status) {
@@ -228,9 +230,10 @@ class OrderActionFragment : Fragment(), CoroutineScope {
 
                         Status.ERROR -> {
 //                            progressDialog.cancel()
-                            dialog.setTitle("Xatolik")
-                            dialog.setMessage(it.message)
-                            dialog.show()
+//                            Log.d(TAG, "startOrder: ${it.data}")
+//                            dialog.setTitle("Xatolik")
+//                            dialog.setMessage(it.message)
+//                            dialog.show()
                         }
 
                         Status.SUCCESS -> {
@@ -255,9 +258,15 @@ class OrderActionFragment : Fragment(), CoroutineScope {
     }
 
 
-    private fun finishOrder(tokenResponse: GetDriveTokenResponse) {
+    private fun finishOrder(order: OrdersSocketResponse) {
         launch(Dispatchers.Main) {
-            viewModel.finishOrder(tokenResponse.access, order.id, order.destination_lat, order.destination_long, order.total_sum.toString()).collectLatest {
+            viewModel.finishOrder(
+                "${MySharedPreference.token.access}",
+                order.id,
+                order.destination_lat,
+                order.destination_long,
+                order.total_sum.toString()
+            ).collectLatest {
                 when (it?.status) {
                     Status.LOADING -> {
                         binding.progressBar.visibility = View.VISIBLE
@@ -267,10 +276,10 @@ class OrderActionFragment : Fragment(), CoroutineScope {
                     Status.ERROR -> {
                         binding.progressBar.visibility = View.GONE
                         Log.d(TAG, "finishOrder: $it")
-                        val dialog = AlertDialog.Builder(binding.root.context)
-                        dialog.setTitle("Xatolik")
-                        dialog.setMessage(it.toString())
-                        dialog.show()
+//                        val dialog = AlertDialog.Builder(binding.root.context)
+//                        dialog.setTitle("Xatolik")
+//                        dialog.setMessage(it.toString())
+//                        dialog.show()
                     }
 
                     Status.SUCCESS -> {
@@ -294,4 +303,5 @@ class OrderActionFragment : Fragment(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = Job()
+
 }

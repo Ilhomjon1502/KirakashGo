@@ -9,6 +9,7 @@ data class Data(
     val first_name: String,
     val gender: String,
     val has_baggage: Boolean,
+    val is_busy: Boolean,
     val id: Int,
     val last_name: String,
     val phone: String,

@@ -27,8 +27,6 @@ interface ApiService {
     suspend fun smsCheckCode(
         @Query("username") username: String, @Query("sms_code") sms_code: String
     ): Response<CheckSmsCodeResponse>
-
-
     @POST("user/driver_token/")
     suspend fun getDriverToken(
         @Body() data: GetTokenData

@@ -55,7 +55,7 @@ class MyFindLocation(var context: Context, var viewModel: DriverProfileViewModel
 //                    try {
                     MySharedPreference.init(context)
                     viewModel.postLocationDriver(
-                        MySharedPreference.token.access,
+                        "${MySharedPreference.token.access}",
                         DriverLocationRequest(
                             location.bearing.toString(),
                             location.latitude.toString(),
