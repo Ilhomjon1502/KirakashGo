@@ -37,6 +37,7 @@ import uz.ilhomjon.kirakashgo.taximetr.websocket.MyWebSocketClient
 import java.net.URI
 
 private const val TAG = "HomeFragment"
+
 @AndroidEntryPoint
 class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
 
@@ -66,6 +67,8 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
 
     fun connectWebSocket() {
         MySharedPreference.init(binding.root.context)
+        //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMzgzNTk2LCJpYXQiOjE3MDE4NDc1OTYsImp0aSI6IjM2NGRlNjQzMDkyMzQxOTA4OGY0NjgxNDU0NjU5MDc5IiwidXNlcl9pZCI6MjZ9.K47dcfoYF4a1MCzn-irg_cKmObQy4KBFmg6AdUkRlAw
+        Log.d("KeshOrder", "KeshOrder: ${MySharedPreference.token.access}")
         val serverUri =
             URI("ws://147.182.206.31/ws/orders/?token=${MySharedPreference.token.access}") // Websocket server manzili
         val client = MyWebSocketClient(serverUri)
@@ -77,6 +80,7 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
             Toast.makeText(context, "Buyurtmalarni ko'rish boshlandi", Toast.LENGTH_SHORT).show()
 
             MyWebSocketClient.ordersLiveData.observe(viewLifecycleOwner) {
+                Log.d("WebSocketResponse", "connectWebSocket: $it")
                 orderAdapter.list.clear()
                 orderAdapter.list.addAll(it)
                 orderAdapter.notifyDataSetChanged()
@@ -115,8 +119,8 @@ class HomeFragment : Fragment(), OrderHomeRvAdapter.RvAction {
                             itemRv.progressBar.visibility = View.INVISIBLE
                             OrdersSocketResponse.order = order
                             MySharedPreference.oder = order
-                            Log.d("KeshOrder", "acceptOrder: ${MySharedPreference.oder}")
-                            Log.d(TAG, "acceptOrder: $it")
+                            Log.d(" ", "ResponseData: $it")
+                            Log.d("SaveOrder", "SaveCacheData: ${MySharedPreference.oder}")
                             Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
 //                            findNavController().popBackStack(R.id.homeFragment, true)
                             findNavController().navigate(R.id.orderActionFragment)

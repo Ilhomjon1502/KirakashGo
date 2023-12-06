@@ -72,6 +72,9 @@ dependencies {
     implementation ("com.github.florent37:runtime-permission-kotlin:1.1.2")
     //websocket
     implementation ("org.java-websocket:Java-WebSocket:1.5.1")
+    //autostart//https://github.com/judemanutd/AutoStarter
+    implementation 'com.github.judemanutd:autostarter:1.1.0'
+
 }
 // Allow references to generated code
 kapt {

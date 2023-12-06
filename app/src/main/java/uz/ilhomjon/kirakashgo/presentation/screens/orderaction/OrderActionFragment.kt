@@ -58,6 +58,7 @@ class OrderActionFragment : Fragment(), CoroutineScope {
 
         MySharedPreference.init(binding.root.context)
         order = MySharedPreference.oder!!
+
         Log.d("startOrder", "onCreateView: $order")
         if (MySharedPreference.oder!!.order_status == "start") {
             binding.arrowRight.visibility = View.GONE
@@ -292,5 +293,4 @@ class OrderActionFragment : Fragment(), CoroutineScope {
 
     override val coroutineContext: CoroutineContext
         get() = Job()
-
 }
