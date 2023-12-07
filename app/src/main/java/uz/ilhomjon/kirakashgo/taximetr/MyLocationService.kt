@@ -76,15 +76,15 @@ class MyLocationService : Service() {
             viewModel.postFlow.collect {
                 when (it) {
                     is Resource.Error -> {
-                        Log.d("ServiceCheck", "getCurrentLocation: ${it.message}")
+//                        Log.d("ServiceCheck", "getCurrentLocation: ${it.message}")
                     }
 
                     is Resource.Loading -> {
-                        Log.d("ServiceCheck", "getCurrentLocation: Loading")
+//                        Log.d("ServiceCheck", "getCurrentLocation: Loading")
                     }
 
                     is Resource.Success -> {
-                        Log.d("ServiceCheck", "getCurrentLocation: $it")
+//                        Log.d("ServiceCheck", "getCurrentLocation: $it")
                     }
                 }
             }

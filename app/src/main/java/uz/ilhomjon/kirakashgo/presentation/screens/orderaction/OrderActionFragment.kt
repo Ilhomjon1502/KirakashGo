@@ -234,6 +234,7 @@ class OrderActionFragment : Fragment(), CoroutineScope {
 //                            dialog.setTitle("Xatolik")
 //                            dialog.setMessage(it.message)
 //                            dialog.show()
+                            Toast.makeText(context, "Error start \n$it", Toast.LENGTH_SHORT).show()
                         }
 
                         Status.SUCCESS -> {
@@ -244,7 +245,7 @@ class OrderActionFragment : Fragment(), CoroutineScope {
                             MySharedPreference.oder = order
                             binding.comeText.isEnabled = true
                             binding.comeText.text = "Yakunlash"
-                            Log.d("MyStartOrder", "startOrder: ${MySharedPreference.oder}")
+                            Toast.makeText(context, "Start order,\n$it", Toast.LENGTH_SHORT).show()
                         }
 
                         else -> Toast.makeText(

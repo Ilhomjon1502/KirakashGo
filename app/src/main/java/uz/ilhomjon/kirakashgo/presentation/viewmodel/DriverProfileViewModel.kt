@@ -59,7 +59,7 @@ class DriverProfileViewModel @Inject constructor(
         viewModelScope.launch {
             driverRepository.postLocationDriver(key, driverLocationRequest)
                 .collect {
-                    Log.d("DriverProfileViewModel", "getDriverProfile: ${it}")
+//                    Log.d("DriverProfileViewModel", "getDriverProfile: ${it}")
                     if (it.isSuccessful) {
                         _postFlow.emit(Resource.Success(it.body()))
                     }
@@ -132,7 +132,7 @@ class DriverProfileViewModel @Inject constructor(
         val flow = driverRepository.startOrder(token, id)
         flow
             .catch {
-                Log.d(TAG, "startOrder: $it")
+                Log.e(TAG, "startOrder: $it")
                 orderStartFlow.value = MyResource.error(it.message)
             }
             .collectLatest {
